@@ -30,8 +30,9 @@ def entra():
                           request.form.get('contrasena')),
                       privilegio=None)
         login = ModeloLogin.ConsultarLogin(mysql, login.correo, login.contrasena)
+        print(login)
         if login.id_login != None:
-            if login.privilegio == 1:
+            if login.privilegio == 'user':
                 return render_template('prueba.html')
             else:
                 return render_template('prueba1.html')
