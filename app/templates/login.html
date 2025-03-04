@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}Index{% endblock %}
+
+{% block page_content %}
+    <div class="col-12 col-sm-12 col-md-10 col-lg-10 col-xl-10 position-relative top-0 start-50 translate-middle-x p-2 mt-2" style="background-color: rgb(127, 255, 127);">
+            <p class="display-6 text-center fw-bold">Inicia Sesión</p>
+    </div>
+        <div class="col-5 col-sm-12 col-md-10 col-lg-18 col-xl-10 position-relative top-0 start-50 translate-middle-x p-5 mt-5 " style="background-color: #0dcaf0">
+            <div class="container d-flex justify-content-center align-items-center col-12" style="background-color: #0a53be">
+                <form class="form-control justify-content-center w-50 h-100"  action="/entra" method="POST">
+                    <div class="mb-3">
+                        <label for="correo" class="form-label">Correo electrónico</label>
+                        <input type="email" class="form-control" id="correo" name="correo" aria-describedby="emailHelp">
+                    </div>
+                    <div class="mb-3">
+                        <label for="contrasena" class="form-label">Contraseña</label>
+                        <input type="password" class="form-control" id="contrasena" name="contrasena">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Ingresar</button>
+                 </form>
+                {% if booleano == False: %}
+                <script src="{{ url_for('static', filename='js/alerta.js')}}"></script>
+                {% endif %}
+            </div>
+        </div>
+{% endblock %}

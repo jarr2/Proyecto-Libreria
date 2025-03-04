@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Index{% endblock %}
+
+
+{% block page_content %}
+    <div class="col-12 col-sm-12 col-md-10 col-lg-10 col-xl-10 position-relative top-0 start-50 translate-middle-x p-2 mt-2" style="background-color: rgb(127, 255, 127);">
+        <p class="display-6 text-center fw-bold">¡Bienvenidos a nuestra librería!</p>
+    </div>
+    <div class="col-5 col-sm-12 col-md-10 col-lg-18 col-xl-10 position-relative top-0 start-50 translate-middle-x p-5 mt-5" style="background-color: rgb(127, 255, 127);">
+        <div class="d-flex justify-content-center col-12">
+            <button type="button" class="btn btn-success btn-lg col-6 mt-3" onclick="location.href='/login'">Iniciar Sesión</button>
+        </div>
+        <div class="d-flex justify-content-center col-12">
+            <button type="button" class="btn btn-success btn-lg col-6 mt-3">Registrarse</button>
+        </div>
+    </div>
+
+    {% if cerrarSesión==True %}
+    <script src="{{ url_for('static', filename='js/cerrarsesion.js')}}"></script>
+    {% endif %}
+    
+{% endblock %}

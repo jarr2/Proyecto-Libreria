@@ -1,0 +1,1 @@
+alert("No se ha encontrado tu usuario, por favor regístrate.")

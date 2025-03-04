@@ -1,0 +1,1 @@
+alert("Se ha cerrado la sesión correctamente.")
