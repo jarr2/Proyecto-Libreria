@@ -1,11 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h1>Si funcionó el login para cliente</h1>
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block title %}Bienvenido{% endblock %}
+
+{% block page_content %}
+
+<h1 class="scale-up-center" onmouseover="animateCSS('.messi','pulse');" id='messi'>Bienvenido usuario cliente !</h1>
+    <div class="col-12 col-sm-12 col-md-10 col-lg-10 col-xl-10 position-relative top-0 start-50 translate-middle-x p-2 mt-2" id="principal" >
+        <div class="row row-cols-5 d-flex flex-wrap " id="muestra_libros">
+
+        </div>
+    </div>
+
+{% endblock %}
