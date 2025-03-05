@@ -4,11 +4,99 @@
 
 {% block page_content %}
 
-<h1 class="scale-up-center" onmouseover="animateCSS('.messi','pulse');" id='messi'>Bienvenido usuario cliente !</h1>
+<h1 class="scale-up-center " >Bienvenido usuario cliente !</h1>
     <div class="col-12 col-sm-12 col-md-10 col-lg-10 col-xl-10 position-relative top-0 start-50 translate-middle-x p-2 mt-2" id="principal" >
         <div class="row row-cols-5 d-flex flex-wrap " id="muestra_libros">
 
         </div>
     </div>
 
+    <script>
+         document.addEventListener('DOMContentLoaded', function() {
+        fetch('/libros')
+            .then(response => response.json())
+            .then(data => {
+                renderizarLibros(data)
+            })
+            .catch(error => console.error('Error:', error));
+    });
+
+    function renderizarLibros(libros){
+        contenedor = document.getElementById("muestra_libros")
+        principal = document.getElementById("principal")
+        console.log(libros)
+        libros.forEach(lb => {
+            const columna = document.createElement("div");
+            var elemento = "my-element"+lb[0]
+            console.log(elemento)
+            columna.classList.add("col", "scale-up-center",elemento.toString());
+            elemento = '.'+elemento;
+            columna.setAttribute('onmouseover', `animateCSS('${elemento.toString()}','pulse');`);
+            columna.setAttribute('onclick', `window.location.href='/libros/${lb[1]}?id=${lb[0]}'`);
+            const card = document.createElement("div");
+            card.classList.add("card");
+            const img = document.createElement("img");
+            img.classList.add("card-img-top");
+            img.setAttribute("src", lb[7]);
+            const card_body = document.createElement('div');
+            card_body.classList.add("card-body");
+            const h5 = document.createElement('h5');
+            h5.classList.add("card-title", "text-truncate");
+            h5.innerHTML = lb[1]
+
+            const p1 = document.createElement('p');
+            p1.classList.add("card-text");
+            p1.innerHTML = lb[2];
+
+
+            const small = document.createElement('small');
+            small.classList.add("text-muted");
+            small.innerHTML = lb[3];
+            const p2 = document.createElement('p');
+            p2.classList.add("card-text");
+            p2.appendChild(small)
+
+            const ul = document.createElement('ul');
+            ul.classList.add("list-group", "list-group-flush");
+
+            const li = document.createElement('li');
+            li.classList.add("list-group-item");
+
+            const contenedor2 = document.createElement('div');
+            contenedor2.classList.add("row");
+
+            const contenedor3 = document.createElement('div');
+            contenedor3.classList.add("col-5");
+            contenedor3.innerHTML = '$' + lb[6]
+
+            const h5_badge = document.createElement('h5');
+            const badge = document.createElement('span');
+            badge.classList.add("badge", "text-bg-info","position-absolute","word-break");
+            badge.innerHTML = lb[5];
+            const div_otro = document.createElement('div');
+            div_otro.classList.add('col-7');
+
+            h5_badge.appendChild(badge);
+            div_otro.appendChild(h5_badge);
+            contenedor2.appendChild(contenedor3);
+            if (lb[5] == 'Nuevo') {
+
+            contenedor2.appendChild(div_otro);
+            }
+            li.appendChild(contenedor2)
+            ul.appendChild(li)
+
+            card_body.appendChild(h5)
+            card_body.appendChild(p1)
+            card_body.appendChild(p2)
+
+            card.appendChild(img)
+            card.appendChild(card_body)
+            card.appendChild(ul)
+
+            columna.appendChild(card)
+            contenedor.appendChild(columna)
+    });
+    }
+    </script>
 {% endblock %}

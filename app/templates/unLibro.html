@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+
+{% block title %}Bienvenido{% endblock %}
+
+{% block page_content %}
+<head>
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet"/>
+</head>
+
+<link href="../static/css/starrr.css" rel=stylesheet/>
+    <script src="../static/js/starrr.js"></script>
+
+    <div class="col-9 col-sm-9 col-md-9 col-lg-9 col-xl-9 position-relative top-0 start-50 translate-middle-x p-2 mt-2" id="principal" >
+        <div class="row row-cols-1 d-flex flex-wrap " id="contedor">
+            <div class="card mb-3" style="max-width: 1500px;">
+                  <div class="row g-0">
+                    <div class="col-md-4">
+                      <img src="../{{libro.img_ruta}}" class="img-fluid rounded-start  p-3" alt="...">
+                    </div>
+                    <div class="col-md-8">
+                      <div class="card-body">
+                        <h2 class="card-title">{{libro.nombre}}</h2>
+                        <h4 class="card-subtitle mb-2 text-muted">{{libro.editorial}}</h4>
+                        <p class="card-text">Los Avengers protegen al planeta desde la Ciudad Imposible, su superfortaleza orbital. Pero un cuartel no es necesariamente un hogar, y en territorio nuevo, los Avengers son vulnerables... ¡Así que llegó el momento de llamar a uno de sus más viejos aliados para que venga en su ayuda! ¡LLEGA: EDWIN JARVIS! Además, es hora de formar un nuevo equipo de Avengers. Ataques orquestados buscan alimentar la histeria anti-mutante, pero algunos de los mejores amigos de Steve Rogers son mutantes. Este nuevo equipo deberá resolver el misterio de quién es el nuevo Capitán Krakoa, y detener a los asesinos antes de que enciendan las llamas de una nueva guerra mundial.</p>
+                          <p class="card-text"><small class="text-muted"><b>Autor:</b> {{libro.autor}}</small></p>
+                          <hr>
+                          <p class="fs-1 fw-bold text-success">${{libro.precio}}</p>
+                          <div class="row">
+                              <div class="input-group col w-25 col-3">
+                                  <button class="btn btn-outline-primary disabled" type="button" onclick="menosMas('menos');" id="btn_min" >-</button>
+                                  <input type="number" class="form-control text-center"  id="input_number" value="1" min="1">
+                                  <button class="btn btn-outline-primary" type="button" onclick="menosMas('mas');">+</button>
+
+                              </div>
+                              <div class="col col-9">
+                                    <button class="btn btn-success w-100">Agregar al carrito</button>
+                              </div>
+                          </div>
+                          <div class="row-cols-1">
+                              <br>
+                              Califica el libro: <span id="Estrellas"></span>   <span id="promedio-calificacion"> <p> Puntuación: {% if promedio is not none %}
+                                    {{ promedio }}
+                                {% else %}
+                                    No disponible
+                              {% endif %} </p></span>
+                              </br>
+                          </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+        </div>
+    </div>
+
+
+    <script>
+
+    function menosMas(nombre){
+        input = document.getElementById("input_number");
+        valor = document.getElementById("input_number").value;
+         btn_menos = document.getElementById("btn_min");
+        if (valor == ""){
+            valor = 0
+            
+        }
+
+
+
+        if((valor-1) == 1 && nombre=='menos'){
+            btn_menos.classList.add("disabled")
+        }else if (btn_menos.classList.contains("disabled")){
+            btn_menos.classList.remove("disabled")
+        }
+         input.value = 0
+        if (nombre == 'menos'){
+            valor = parseInt(valor)-1;
+        }else if(nombre == 'mas'){
+            valor = parseInt(valor)+1;
+        }
+        input.value = valor
+    }
+
+        $(document).ready(function() {
+    $('#Estrellas').starrr({
+        change: function(e, valor) {
+            alert(valor);
+            $.ajax({
+                url: 'http://127.0.0.1:5000/Guardar_calificacion',
+                type: 'GET',
+                data: { ranking: valor },
+                dataType: 'json',
+               success: function(response) {
+                    console.log("Respuesta del servidor:", response);
+                    if (response.promedio !== undefined && response.promedio !== null) {
+                        var promedio = response.promedio.toFixed(1); //para limitar a un decimal chavales
+                        $('#promedio-calificacion').text('Puntuación: ' + promedio);
+                    } else {
+                        $('#promedio-calificacion').text('Promedio de calificación: No disponible');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.log("Error al enviar la calificación:", xhr.responseText);
+                    alert('Error al guardar la calificación.');
+                }
+            });
+
+
+        }
+    });
+});
+    </script>
+{% endblock %}
