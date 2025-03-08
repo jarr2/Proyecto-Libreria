@@ -1,4 +1,6 @@
 from .entities.Libro import Libro
+import requests
+import json
 
 class ModeloLibro():
 
@@ -52,3 +54,13 @@ class ModeloLibro():
         except Exception as ex:
             print("Error en la consulta sql: ", ex)
             return False
+
+    @classmethod
+    def LibrosApi(self):
+        url = "https://v7lo3sw1rk.execute-api.us-east-1.amazonaws.com/libreria_etapa"
+        response = requests.get(url)
+        # Verificar si la solicitud fue exitosa
+        if response.status_code == 200:
+            data = response.json()
+            body_json = json.loads(data['body'])
+        return body_json

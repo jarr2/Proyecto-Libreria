@@ -225,6 +225,9 @@ def muestraUn_Libro(nombre_libro):
     #print(libro)
     return render_template("unLibro.html", libro=libro, nombre=session['nombre'])
 
-
+@app.route('/listaLibros')
+def imprimeLibros():
+    data = ModeloLibro.LibrosApi()
+    return render_template("lista_libros.html",data=data)
 if __name__ == '__main__':
     app.run()
