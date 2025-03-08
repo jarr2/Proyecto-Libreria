@@ -11,7 +11,7 @@ class ModeloLibro():
             cursor.execute("SELECT * FROM libros")
             conn.close()
             libros = cursor.fetchall()
-            print(libros)
+            #print(libros)
             for libro in libros:
                 if libros != None:
                     libro_obj = Libro(id_libro=None,nombre=None, editorial=None, autor=None, stock=None, estatus=None, precio=None, img_ruta=None)
