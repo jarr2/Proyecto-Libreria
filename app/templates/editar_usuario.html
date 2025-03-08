@@ -1,14 +1,23 @@
+{% extends 'base_admin.html' %}
+
+{% block page_content %}
 <h1>Editar Usuario</h1>
-<form method="POST">
-  <label>Correo:</label><br>
-  <input type="email" name="correo" value="{{ login.correo }}" required><br>
-  <label>Contraseña:</label><br>
-  <input type="password" name="contrasena" value="{{ login.contrasena }}" required><br>
-  <label>Nombre:</label><br>
-  <input type="text" name="nombre" value="{{ usuario.nombre }}" required><br>
-  <label>Apellidos:</label><br>
-  <input type="text" name="apellidos" value="{{ usuario.apellidos }}" required><br>
-  <label>Teléfono:</label><br>
-  <input type="text" name="telefono" value="{{ usuario.numero_telefonico }}" required><br>
-  <button type="submit" class="btn btn-primary">Actualizar</button>
-</form>
+<div class="container">
+  <button onclick="history.back()" class="btn btn-secondary mt-3">Atrás</button>
+  <form method="POST">
+    <div class="row">
+      <label>Correo:</label><br>
+        <input type="email" name="correo" value="{{ login.correo }}" required><br>
+        <label>Contraseña:</label><br>
+        <input type="password" name="contrasena" value="{{ login.contrasena }}" required><br>
+        <label>Nombre:</label><br>
+        <input type="text" name="nombre" value="{{ usuario.nombre }}" required><br>
+        <label>Apellidos:</label><br>
+        <input type="text" name="apellidos" value="{{ usuario.apellidos }}" required><br>
+        <label>Teléfono:</label><br>
+        <input type="text" name="telefono" value="{{ usuario.numero_telefonico }}" required><br>
+        <button type="submit" class="btn btn-primary">Actualizar</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

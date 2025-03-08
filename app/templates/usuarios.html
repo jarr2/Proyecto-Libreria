@@ -16,10 +16,11 @@
           {% endfor %}
         </div>
       {% endif %}
-    {% endwith %}
+{% endwith %}
 <div class="offset-md-2 col-md-8" style="padding-top: 60px">
+  <button onclick="history.back()" class="btn btn-secondary mt-3">Atrás</button>
     <h2>Administración de usuarios</h2>
-    <a href="/crear" class="btn btn-success">Crear Usuario</a>
+    <a href="/usuarios/crear" class="btn btn-success">Crear Usuario</a>
     <table id="tabla" class=table table-striped nowrap container-fluid" style="width:100%">
       <thead>
         <tr>
@@ -38,7 +39,7 @@
           <td>{{ d[5] }}</td>
           <td>
             <a href="/usuarios/editar/{{ d[0] }}" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></a>
-            <a href="/eliminar/{{ d[0] }}" class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></a>
+            <a href="/usuarios/eliminar/{{ d[0] }}/{{ d[1] }}/{{ d[2] }}" class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></a>
           </td>
         </tr>
         {% endfor %}
