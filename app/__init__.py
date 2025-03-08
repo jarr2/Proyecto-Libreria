@@ -6,6 +6,7 @@ from models.ModeloLogin import ModeloLogin
 from models.entities.Login import Login
 from models.ModeloLibro import ModeloLibro
 from models.entities.Libro import Libro
+from models.ConsultaApi import app_api
 
 app = Flask(__name__)
 app.config.from_object(config['development'])
@@ -25,6 +26,7 @@ def login():
 @app.route('/entra', methods=['POST'])
 def entra():
     if request.method == 'POST':
+        app_api
         login = Login(id_login=None,
                       correo=Login.encriptar(request.form.get('correo')),
                       contrasena=Login.encriptarContr(
