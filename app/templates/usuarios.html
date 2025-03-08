@@ -1,0 +1,65 @@
+{% extends 'base_admin.html' %}
+{% block title %} Administrar usuarios {% endblock %}
+
+{% block customCSS %}
+<link rel="stylesheet" type="text/css" href="../static/css/jquery.dataTables.min.css" />
+{% endblock %}
+
+{% block page_content %}
+{% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="alert-container">
+          {% for message in messages %}
+            <div class="alert alert-info">
+              {{ message }}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+<div class="offset-md-2 col-md-8" style="padding-top: 60px">
+    <h2>Administración de usuarios</h2>
+    <a href="/crear" class="btn btn-success">Crear Usuario</a>
+    <table id="tabla" class=table table-striped nowrap container-fluid" style="width:100%">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Correo</th>
+          <th>Contraseña</th>
+          <th>privilegio</th>
+        </tr>
+      </thead>
+      <tbody>    
+        {% for d in data['usuarios'] %}
+        <tr>
+          <td>{{ d[0] }}</td>
+          <td>{{ d[3] }}</td>
+          <td>{{ d[4] }}</td>
+          <td>{{ d[5] }}</td>
+          <td>
+            <a href="/usuarios/editar/{{ d[0] }}" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></a>
+            <a href="/eliminar/{{ d[0] }}" class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+{% endblock %}
+
+
+
+{% block customJS %}
+<!-- 
+<script src="../static/js/jquery-3.7.0.min.js"></script>
+<script src="../static/js/jquery.dataTables.min.js"></script>
+<script src="../static/js/es-MX.json"></script>
+<script>
+$(document).ready(function() {
+$('#tabla').DataTable({
+language: {
+url: "../static/js/es-MX.json"
+}
+});
+});
+</script>
+-->
+{% endblock %}

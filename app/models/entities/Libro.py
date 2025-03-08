@@ -9,3 +9,4 @@ class Libro():
         self.estatus = estatus
         self.precio = precio
         self.img_ruta = img_ruta
+

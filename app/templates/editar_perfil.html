@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block title %}Mi Perfil{% endblock %}
+{% block CustomCSS %}
+{% endblock %}
+
+{% block page_content %}
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="alert-container">
+          {% for message in messages %}
+            <div class="alert alert-info">
+              {{ message }}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+    <h2>Por favor edita los campos con tu información. No dejes ninguno en blanco.</h2>
+    <div class="container">
+      <form action="/mi-perfil/actualizar" method="POST">
+        <!-- Primera fila -->
+        <div class="row">
+          <div class="form-group col-md-6">
+            <label for="nombres">Nombres</label>
+            <input type="text" class="form-control" id="nombres" name="nombres" value="{{ usuario.nombre }}" maxlength="30" required>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="apellidos">Apellidos</label>
+            <input type="text" class="form-control" id="apellidos" name="apellidos" value="{{ usuario.apellidos }}" maxlength="30" required>
+          </div>
+        </div>
+        
+        <!-- Segunda fila -->
+        <div class="row">
+          <div class="form-group col-md-6">
+            <label for="calle">Calle</label>
+            <input type="text" class="form-control" id="calle" name="calle" value="{{ direccion.calle }}" maxlength="25" required>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="num_telefonico">Teléfono</label>
+            <input type="text" class="form-control" id="num_telefonico" name="num_telefonico" value="{{ usuario.numero_telefonico }}" maxlength="10" required>
+          </div>
+        </div>
+        
+        <!-- Tercera fila -->
+        <div class="row">
+          <div class="form-group col-md-4">
+            <label for="num_interior">Número Interior</label>
+            <input type="text" class="form-control" id="num_interior" name="num_interior" value="{{ direccion.num_interior }}" maxlength="4" required>
+          </div>
+          <div class="form-group col-md-4">
+            <label for="num_exterior">Número Exterior</label>
+            <input type="text" class="form-control" id="num_exterior" name="num_exterior" value="{{ direccion.num_exterior }}" maxlength="4" required>
+          </div>
+          <div class="form-group col-md-4">
+            <label for="colonia">Colonia</label>
+            <input type="text" class="form-control" id="colonia" name="colonia" value="{{ direccion.colonia }}" maxlength="25" required>
+          </div>
+        </div>
+        
+        <!-- Última fila -->
+        <div class="row">
+          <div class="form-group col-md-6">
+            <label for="municipio">Municipio</label>
+            <input type="text" class="form-control" id="municipio" name="municipio" value="{{ direccion.municipio }}" maxlength="25" required>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="estado">Estado</label>
+            <select class="form-control" id="estado" name="estado">
+                <option selected>{{ direccion.estado }}</option>
+                <option>Guerrero</option>
+                <option>CdMx</option>
+                <option>Estado de México</option>
+            </select>
+            </div>
+          <div class="form-group col-md-6">
+            <label for="cp">Código postal</label>
+            <input type="text" class="form-control" id="cp" name="cp" value="{{ direccion.cp }}" maxlength="5" required>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Actualizar mis datos</button>
+      </form>
+    </div>
+{% endblock %}
+
+{% block customJS %}
+{% endblock %}
