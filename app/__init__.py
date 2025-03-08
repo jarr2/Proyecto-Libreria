@@ -13,6 +13,8 @@ from models.ModeloLibro import ModeloLibro
 from models.ModeloUsuario import ModeloUsuario
 from models.ModeloDireccion import ModeloDireccion
 
+from models.ConsultaApi import app_api
+
 app = Flask(__name__)
 app.config.from_object(config['development'])
 mysql = MySQL(app)
@@ -38,6 +40,7 @@ def login():
 @app.route('/home', methods=['POST','GET'])
 def entra():
     if request.method == 'POST':
+        app_api
         login = Login(id_login=None,
                       correo=Login.encriptar(request.form.get('correo')),
                       contrasena=Login.encriptarContr(request.form.get('contrasena')),
