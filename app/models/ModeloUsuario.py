@@ -65,7 +65,6 @@ class ModeloUsuario():
             usuarios = cursor.fetchall()
             conn.close()
             data={'usuarios': usuarios}
-            print(data)
             return data
         except Exception as ex:
             print("Error en la consulta sql: ",ex)
@@ -80,7 +79,7 @@ class ModeloUsuario():
             conn.commit()            
             datosUsuario = cursor.fetchone()
             conn.close()
-            if cursor.rowcount > 0:
+            if cursor.rowcount > 0 and cursor.rowcount <= 3:
                 print("Actualización exitosa.")
                 return True
             else:
@@ -89,3 +88,57 @@ class ModeloUsuario():
         except Exception as ex:
             print("Error en la consulta sql: ",ex)
             return False
+    
+    @classmethod
+    def Crear_un_Usuario(cls, db, login, usuario, direccion):
+        try:
+            conn = db.connect()
+            cursor = conn.cursor()
+            cursor.execute("""
+                            INSERT INTO Direcciones (calle, estado, municipio, colonia, cp, num_exterior, num_interior)
+                            VALUES (%s, %s, %s, %s, %s, %s, %s)
+                            """, (direccion.calle, direccion.estado, direccion.municipio, direccion.colonia, direccion.cp, direccion.num_exterior, direccion.num_interior))
+            direccion.id_direccion = cursor.lastrowid
+            cursor.execute("""
+                            INSERT INTO Logins (correo, contrasena, privilegio)
+                            VALUES (%s, %s, %s)
+                            """, (login.correo, login.contrasena, login.privilegio))
+            login.id_login = cursor.lastrowid
+            cursor.execute("""
+                            INSERT INTO Usuarios (id_direccion, id_login, nombre, apellidos, numero_telefonico)
+                            VALUES (%s, %s, %s, %s, %s)
+                             """, (direccion.id_direccion, login.id_login, usuario.nombre, usuario.apellidos, usuario.numero_telefonico))
+            conn.commit()
+            conn.close()
+            if cursor.lastrowid:
+                return True
+            else:
+                return False
+        
+        except Exception as ex:
+            print('Error en la consulta sql:', ex)
+            return False
+    
+    @classmethod
+    def Eliminar_un_Usuario(cls, db, ids):
+        try:
+            conn = db.connect()
+            cursor = conn.cursor()
+            cursor.execute("DELETE FROM Usuarios WHERE id_usuario = %s",ids[1])
+            filas_borradas_usuarios = cursor.rowcount
+            cursor.execute("DELETE FROM Logins WHERE id_login = %s",ids[0])
+            filas_borradas_logins = cursor.rowcount
+            cursor.execute("DELETE FROM Direcciones WHERE id_direccion = %s",ids[2])
+            filas_borradas_direcciones = cursor.rowcount
+            conn.commit()
+            if filas_borradas_usuarios > 0 or filas_borradas_logins > 0 or filas_borradas_direcciones > 0:
+                print('registros eliminados correctamente')
+                return True
+            else:
+                return False
+        except db.conn.Error as err:
+            conn.rollback()
+            print(f'Error al eliminar registros: {err}','danger')
+        finally:
+            cursor.close()
+            conn.close()

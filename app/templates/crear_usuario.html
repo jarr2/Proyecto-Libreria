@@ -1,0 +1,92 @@
+{% extends 'base_admin.html' %}
+
+{% block page_content %}
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="alert-container">
+          {% for message in messages %}
+            <div class="alert alert-info">
+              {{ message }}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+    <h2>Por favor edita los campos con tu información. No dejes ninguno en blanco.</h2>
+    <div class="container">
+        <button onclick="history.back()" class="btn btn-secondary mt-3">Atrás</button>
+      <form method="POST">
+        <!-- Primera fila -->
+        <div class="row">
+          <div class="form-group col-md-6">
+            <label for="nombres">Correo</label>
+            <input type="text" class="form-control" id="correo" name="correo" maxlength="30" required>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="apellidos">Contraseña</label>
+            <input type="password" class="form-control" id="contrasena" name="contrasena" maxlength="30" required>
+          </div>    
+        </div>
+
+        <div class="row">
+            <div class="form-group col-md-6">
+              <label for="nombres">Nombres</label>
+              <input type="text" class="form-control" id="nombres" name="nombres" maxlength="30" required>
+            </div>
+            <div class="form-group col-md-6">
+              <label for="apellidos">Apellidos</label>
+              <input type="text" class="form-control" id="apellidos" name="apellidos" maxlength="30" required>
+            </div>
+        </div>
+        <!-- Segunda fila -->
+        <div class="row">
+          <div class="form-group col-md-6">
+            <label for="calle">Calle</label>
+            <input type="text" class="form-control" id="calle" name="calle" maxlength="25" required>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="num_telefonico">Teléfono</label>
+            <input type="text" class="form-control" id="num_telefonico" name="telefono" maxlength="10" required>
+          </div>
+        </div>
+        
+        <!-- Tercera fila -->
+        <div class="row">
+          <div class="form-group col-md-4">
+            <label for="num_interior">Número Interior</label>
+            <input type="text" class="form-control" id="num_interior" name="num_interior" maxlength="4" required>
+          </div>
+          <div class="form-group col-md-4">
+            <label for="num_exterior">Número Exterior</label>
+            <input type="text" class="form-control" id="num_exterior" name="num_exterior" maxlength="4" required>
+          </div>
+          <div class="form-group col-md-4">
+            <label for="colonia">Colonia</label>
+            <input type="text" class="form-control" id="colonia" name="colonia" maxlength="25" required>
+          </div>
+        </div>
+        
+        <!-- Última fila -->
+        <div class="row">
+          <div class="form-group col-md-6">
+            <label for="municipio">Municipio</label>
+            <input type="text" class="form-control" id="municipio" name="municipio" maxlength="25" required>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="estado">Estado</label>
+            <select class="form-control" id="estado" name="estado">
+                <option>Guerrero</option>
+                <option>Morelos</option>
+                <option>CdMx</option>
+                <option>Estado de México</option>
+            </select>
+            </div>
+          <div class="form-group col-md-6">
+            <label for="cp">Código postal</label>
+            <input type="text" class="form-control" id="cp" name="cp" maxlength="5" required>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Crear usuario</button>
+      </form>
+    </div>
+{% endblock %}
