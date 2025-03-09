@@ -1,6 +1,10 @@
+from http.client import responses
+import os
 from flask import Flask, jsonify, render_template, request, redirect,session, flash
 from config import config
 from flaskext.mysql import MySQL
+
+from werkzeug.utils import secure_filename
 
 
 from models.entities.Login import Login
@@ -16,7 +20,10 @@ from models.ModeloDireccion import ModeloDireccion
 from models.ConsultaApi import app_api
 
 app = Flask(__name__)
+UPLOAD_FOLDER = 'img'
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 app.config.from_object(config['development'])
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 mysql = MySQL(app)
 @app.route('/')
 def index():
@@ -185,5 +192,60 @@ def muestraUn_Libro(nombre_libro):
 def imprimeLibros():
     data = ModeloLibro.LibrosApi()
     return render_template("lista_libros.html",data=data)
+
+@app.route('/actualizarLibro', methods=['POST', 'GET'])
+def actualizaLibro():
+    if request.method == 'GET':
+        id = request.args.get('id')
+        datos = ModeloLibro.unLibro(mysql, id)
+        # print(datos)
+        libro = Libro(id_libro=id, nombre=datos.nombre, editorial=datos.editorial, autor=datos.autor, stock=int(datos.stock),
+        estatus=datos.estatus, precio=float(datos.precio), img_ruta=datos.img_ruta)
+        return render_template("actualizarLibro.html",data=libro)
+    elif request.method == 'POST':
+        id = request.form.get('id')
+        nombre = request.form.get('nombre')
+        editorial = request.form.get('editorial')
+        autor = request.form.get('autor')
+        stock = request.form.get('stock')
+        estatus = request.form.get('estatus')
+        precio = request.form.get('precio')
+        img_ruta = request.form.get('img_ruta')
+        print(id)
+        libro = Libro(id_libro=id, nombre=nombre, editorial=editorial, autor=autor,
+                      stock=int(stock),
+                      estatus=estatus, precio=float(precio),img_ruta=img_ruta)
+        ModeloLibro.Actualizar_Libro(mysql, libro)
+        data = ModeloLibro.LibrosApi()
+        return render_template("lista_libros.html", data=data)
+
+@app.route('/eliminarLibro', methods=['POST', 'GET'])
+def eliminarLibro():
+    if request.method == 'GET':
+        id = request.args.get('id')
+        print(id)
+        ModeloLibro.eliminarLibro(mysql, str(id))
+        data = ModeloLibro.LibrosApi()
+        return render_template("lista_libros.html", data=data)
+
+@app.route('/insertarLibro', methods=['POST', 'GET'])
+def insertarLibro():
+    if request.method == 'POST':
+        print(request.files)
+        if 'file' not in request.files:
+            return redirect(request.url)
+        file = request.files['file']
+        if file.filename == '':
+            return redirect(request.url)
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            return "hola"
+    return "bye"
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 if __name__ == '__main__':
+    os.makedirs(UPLOAD_FOLDER, exist_ok=True)
     app.run()

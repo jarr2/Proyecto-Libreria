@@ -1,0 +1,45 @@
+{% extends 'base_admin.html' %}
+
+{% block title %}Bienvenido{% endblock %}
+
+{% block page_content %}
+
+
+
+    <div class="col-12 col-sm-12 col-md-10 col-lg-10 col-xl-10 position-relative top-0 start-50 translate-middle-x p-2 mt-2" id="principal" >
+        <h1 class="scale-up-center " >Actualizar un Libro</h1>
+        <form method="post" action="/actualizarLibro">
+            <div class="row row-cols-2 d-flex flex-wrap " id="imprime_libros">
+                <div class="mb-3">
+                  <label for="exampleFormControlInput1" class="form-label fw-bold">Nombre</label>
+                  <input type="text" class="form-control" id="nombre" name="nombre" value="{{ data.nombre }}">
+                </div>
+                 <div class="mb-3">
+                  <label for="exampleFormControlInput1" class="form-label fw-bold">Editorial</label>
+                  <input type="text" class="form-control" id="editorial" name="editorial"  value="{{ data.editorial }}">
+                </div>
+                <div class="mb-3">
+                  <label for="exampleFormControlInput1" class="form-label fw-bold">Autor</label>
+                  <input type="text" class="form-control" id="autor" name="autor" value="{{ data.autor }}">
+                </div>
+                <div class="mb-3">
+                  <label for="exampleFormControlInput1" class="form-label fw-bold">Stock</label>
+                  <input type="number" class="form-control" id="stock"  name="stock" min=1 value="{{ data.stock }}">
+                </div>
+                <div class="mb-3">
+                  <label for="exampleFormControlInput1" class="form-label fw-bold">Estatus</label>
+                  <input type="text" class="form-control" id="estatus" name="estatus" value="{{ data.estatus }} ">
+                </div>
+                <div class="mb-3">
+                  <label for="exampleFormControlInput1" class="form-label fw-bold">Precio</label>
+                  <input type="number" class="form-control" id="precio" name="precio" min=0 value="{{ data.precio }}">
+                </div>
+            </div>
+            <input type="number" id="id" value="{{ data.id_libro }}" name="id" class="invisible" >
+            <input type="text" id="img_ruta" value="{{ data.img_ruta }}" name="img_ruta" class="invisible">
+            <div class="row-cols-1">
+                    <button type="submit" class="btn btn-success mb-3">Actualizar Libro</button>
+                </div>
+        </form>
+    </div>
+{% endblock %}

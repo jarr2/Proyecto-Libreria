@@ -37,7 +37,7 @@ class ModeloLibro():
         try:
             conn = db.connect()
             cursor = conn.cursor()
-            cursor.execute("SELECT * FROM libros where id_libro = {}".format(id_libro))
+            cursor.execute("SELECT * FROM Libros where id_libro = {}".format(id_libro))
             conn.close()
             libro = cursor.fetchone()
             libro_obj = Libro(id_libro=id_libro, nombre=None, editorial=None, autor=None, stock=None, estatus=None,
@@ -64,3 +64,48 @@ class ModeloLibro():
             data = response.json()
             body_json = json.loads(data['body'])
         return body_json
+
+    @classmethod
+    def Actualizar_Libro(cls, db, libro):
+        try:
+            conn = db.connect()
+            cursor = conn.cursor()
+            print(libro.id_libro)
+            cursor.execute(
+                'UPDATE Libros SET nombre = %s, editorial = %s, autor = %s, stock = %s, estatus = %s, precio =%s WHERE id_libro = %s',
+                (libro.nombre,libro.editorial, libro.autor, libro.stock, libro.estatus, libro.precio,libro.id_libro))
+            conn.commit()
+            datosUsuario = cursor.fetchone()
+            conn.close()
+            if cursor.rowcount > 0:
+                print("Actualización exitosa.")
+                return True
+            else:
+                print("No se encontraron registros para actualizar.")
+                return False
+        except Exception as ex:
+            print("Error en la consulta sql: ", ex)
+            return False
+
+    @classmethod
+    def eliminarLibro(self,db, id):
+        try:
+            conn = db.connect()
+            cursor = conn.cursor()
+            cursor.execute(
+                'DELETE FROM Libros WHERE id_libro = %s',
+                (id))
+            conn.commit()
+            datosUsuario = cursor.fetchone()
+            conn.close()
+            if cursor.rowcount > 0:
+                print("Registro eliminado")
+                return True
+            else:
+                print("No se encontraron registros para actualizar.")
+                return False
+        except Exception as ex:
+            print("Error en la consulta sql: ", ex)
+            return False
+
+
