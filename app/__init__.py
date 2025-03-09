@@ -37,10 +37,19 @@ def login():
         return render_template('login.html')
     else:
         print('con sesión ', session.values(), session.keys())
-        if session['privilegio'] == 'user':
-            return render_template('home_usuario.html', nombre=session['nombre'])
+        if session['privilegio'] == None:
+            session.pop('id_login', None)
+            session.pop('privilegio', None)
+            session.pop('id_direccion', None)
+            session.pop('id_usuario', None)
+            session.pop('message', None)
+            session.pop('nombre', None)
+            return redirect('/login')
         else:
-            return render_template('home_admin.html', nombre=session['nombre'])
+            if session['privilegio'] == 'user':
+                return render_template('home_usuario.html', nombre=session['nombre'])
+            else:
+                return render_template('home_admin.html', nombre=session['nombre'])
 
 
 
@@ -53,17 +62,19 @@ def entra():
                       contrasena=Login.encriptarContr(request.form.get('contrasena')),
                       privilegio=None)
         login = ModeloLogin.ConsultarLogin(mysql, login.correo, login.contrasena)
-        #print(login)
+        print(login.privilegio)
         session['id_login'] = login.id_login
         session['privilegio'] = login.privilegio
         session['nombre'] = ModeloUsuario.Consultar_Nombre(mysql, session['id_login'])
-        if login.id_login != None:
+        if login.privilegio == None:
+            print(login.privilegio,'es igual a None')
+            return redirect('/login')
+        else:
+            print(login.privilegio,'es diferente a None')
             if session['privilegio'] == 'user':
                 return render_template('home_usuario.html', nombre=session['nombre'])
-            else:
+            elif session['privilegio'] == 'admin':
                 return render_template('home_admin.html', nombre=session['nombre'])
-        else:
-            return redirect('/login')
     if request.method == 'GET':
         if not session:
             return redirect('/login')
@@ -147,7 +158,7 @@ def actualizar_mi_perfil():
 def usuarios():
     if request.method == 'GET':
         usuarios = ModeloUsuario.Consultar_Usuarios(mysql)
-        return render_template('usuarios.html', data=usuarios)
+        return render_template('usuarios.html', data=usuarios, nombre=session['nombre'])
 
 @app.route('/usuarios/editar/<int:id>', methods=['POST', 'GET'])
 def editar_usuario(id):
@@ -169,7 +180,40 @@ def editar_usuario(id):
         else:
             flash('El usuario no se pudo actualizar')
             return redirect('/usuarios')
-    return render_template('editar_usuario.html', login=login, usuario=usuario)    
+    return render_template('editar_usuario.html', login=login, usuario=usuario, nombre=session['id'])    
+
+@app.route('/usuarios/crear', methods=['POST', 'GET'])
+def crear_usuario():
+    if request.method == 'POST':
+        usuario = Usuario(nombre=request.form.get('nombres'), apellidos=request.form.get('apellidos'), numero_telefonico=request.form.get('telefono'),id_usuario=None, id_direccion=None, id_login=None)
+        login = Login(correo=request.form.get('correo'),contrasena=Login.encriptarContr(request.form.get('contrasena')),privilegio='user', id_login=None)
+        direccion = Direccion(calle=request.form.get('calle'),
+                                estado=request.form.get('estado'),
+                                municipio=request.form.get('municipio'),
+                                colonia=request.form.get('colonia'),
+                                cp=request.form.get('cp'),
+                                num_interior=request.form.get('num_interior'),
+                                num_exterior=request.form.get('num_exterior'), id_direccion=None)
+        bandera = ModeloUsuario.Crear_un_Usuario(mysql,login,usuario,direccion)
+        if bandera == True:
+            flash('El usuario se creó con éxito.','success')
+            return redirect('/usuarios')
+        else:
+            flash('Lo sentimos, el usuario no se creó con éxito.')
+            return redirect('/usuarios')
+    return render_template('crear_usuario.html', nombre=session['nombre'])
+
+@app.route('/usuarios/eliminar/<int:id1>/<int:id2>/<int:id3>')
+def eliminar_usuario(id1,id2,id3):
+    #Id1 login, Id2 usuario, Id3 direccion
+    ids = [id1,id2,id3]
+    bandera = ModeloUsuario.Eliminar_un_Usuario(mysql,ids)
+    if bandera == True:
+         flash('El usuario se eliminó con éxito.','success')
+         return redirect('/usuarios')
+    else:
+        flash('Lo sentimos, el usuario no se eliminó con éxito.','warning')
+        return redirect('/usuarios')
 
 @app.route('/libros', methods=['POST','GET'])
 def MuestraLibros():
