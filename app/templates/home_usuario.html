@@ -33,7 +33,8 @@
             columna.classList.add("col", "scale-up-center",elemento.toString());
             elemento = '.'+elemento;
             columna.setAttribute('onmouseover', `animateCSS('${elemento.toString()}','pulse');`);
-            columna.setAttribute('onclick', `window.location.href='/libros/${lb[1]}?id=${lb[0]}'`);
+            let encodedString = encodeURIComponent(lb[1]);
+            columna.setAttribute('onclick', `window.location.href='/libros/${encodedString}?id=${lb[0]}'`);
             const card = document.createElement("div");
             card.classList.add("card");
             const img = document.createElement("img");
