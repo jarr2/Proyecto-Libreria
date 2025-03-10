@@ -10,7 +10,7 @@ class ModeloLibro():
         try:
             conn = db.connect()
             cursor = conn.cursor()
-            cursor.execute("SELECT * FROM libros")
+            cursor.execute("SELECT * FROM Libros")
             conn.close()
             libros = cursor.fetchall()
             #print(libros)
@@ -108,4 +108,23 @@ class ModeloLibro():
             print("Error en la consulta sql: ", ex)
             return False
 
-
+    @classmethod
+    def insertarLibro(self, db, libro):
+        try:
+            conn = db.connect()
+            cursor = conn.cursor()
+            cursor.execute(
+                'INSERT INTO Libros (id_libro, nombre, editorial, autor, stock, estatus,precio, img_ruta) VALUES(%s,%s,%s,%s,%s,%s,%s,%s)',
+                (libro.id_libro,libro.nombre,libro.editorial, libro.autor,libro.stock,libro.estatus,libro.precio,libro.img_ruta))
+            conn.commit()
+            datosUsuario = cursor.fetchone()
+            conn.close()
+            if cursor.rowcount > 0:
+                print("Registro insertado")
+                return True
+            else:
+                print("No se encontraron registros para actualizar.")
+                return False
+        except Exception as ex:
+            print("Error en la consulta sql: ", ex)
+            return False

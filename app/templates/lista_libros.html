@@ -61,7 +61,6 @@
         </div>
     </div>
     <!-- Modal -->
-<form class="form-control" method="POST" action="/insertarLibro" enctype="multipart/form-data">
     <div class="modal fade" id="modalsito" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -69,6 +68,7 @@
             <h1 class="modal-title fs-5" id="exampleModalLabel">Inserta un nuevo Libro</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
+            <form method="POST" action="/insertarLibro" enctype="multipart/form-data">
           <div class="modal-body">
                 <div class="row row-cols-2 d-flex flex-wrap">
                     <div class="mb-3">
@@ -99,7 +99,7 @@
                 <div class="row row-cols-1 d-flex flex-wrap">
                     <div class="mb-3">
                       <label for="formFileSm" class="form-label">Carga una imagen del libro</label>
-                      <input class="form-control form-control-sm" id="formFileSm" type="file" required>
+                      <input class="form-control form-control-sm" id="archivo"  name="archivo" type="file" required>
                     </div>
                 </div>
           </div>
@@ -107,10 +107,10 @@
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             <button type="submit" class="btn btn-primary">Guardar</button>
           </div>
+            </form>
         </div>
       </div>
     </div>
-</form>
     <script>
     new DataTable('#tabla');
     </script>

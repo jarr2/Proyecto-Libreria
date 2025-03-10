@@ -272,20 +272,33 @@ def eliminarLibro():
         data = ModeloLibro.LibrosApi()
         return render_template("lista_libros.html", data=data)
 
-@app.route('/insertarLibro', methods=['POST', 'GET'])
+@app.route('/insertarLibro', methods=['POST'])
 def insertarLibro():
     if request.method == 'POST':
+        nombre = request.form.get('nombre')
+        editorial = request.form.get('editorial')
+        autor = request.form.get('autor')
+        stock = request.form.get('stock')
+        estatus = request.form.get('estatus')
+        precio = request.form.get('precio')
         print(request.files)
-        if 'file' not in request.files:
-            return redirect(request.url)
-        file = request.files['file']
+        if 'archivo' not in request.files:
+            return 'No file part'
+        file = request.files['archivo']
         if file.filename == '':
-            return redirect(request.url)
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            return "hola"
-    return "bye"
+            return 'No selected file'
+        if file:
+            filename = file.filename
+            save_path = os.path.join("static/img/", filename)
+            img_ruta = save_path
+            file.save(save_path)
+        print(img_ruta)
+        libro = Libro(id_libro="A1001", nombre=nombre, editorial=editorial, autor=autor,
+                      stock=int(stock),
+                      estatus=estatus, precio=float(precio), img_ruta=img_ruta)
+        ModeloLibro.insertarLibro(mysql, libro)
+
+        return imprimeLibros()
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
