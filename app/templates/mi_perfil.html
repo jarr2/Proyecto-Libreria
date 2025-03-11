@@ -16,27 +16,28 @@
         </div>
       {% endif %}
     {% endwith %}
-    <div class="container">
-      <form action="/mi-perfil/editar" method="GET">
+    <div class="col-12 col-sm-12 col-md-10 col-lg-10 col-xl-10 position-relative top-0 start-50 translate-middle-x p-2 mt-2" id="principal" >
+    <h2 class="h2 mt-3">Actualizar datos</h2>
+      <form action="/mi-perfil/editar" method="GET" class="form-control">
         <!-- Primera fila -->
         <div class="row">
-          <div class="form-group col-md-6">
-            <label for="nombres">Nombres</label>
+          <div class="form-group col-md-6 p-3">
+            <label class="fw-bold" for="nombres">Nombres</label>
             <input type="text" class="form-control" id="nombres" name="nombres" value="{{ usuario.nombre }}" disabled>
           </div>
-          <div class="form-group col-md-6">
-            <label for="apellidos">Apellidos</label>
+          <div class="form-group col-md-6 p-3">
+            <label for="apellidos" class="fw-bold" >Apellidos</label>
             <input type="text" class="form-control" id="apellidos" name="apellidos" value="{{ usuario.apellidos }}" disabled>
           </div>
         </div>
         
         <!-- Segunda fila -->
         <div class="row">
-          <div class="form-group col-md-6">
-            <label for="calle">Calle</label>
+          <div class="form-group col-md-6 p-3">
+            <label for="calle" class="fw-bold">Calle</label>
             <input type="text" class="form-control" id="calle" name="calle" value="{{ direccion.calle }}" disabled>
           </div>
-          <div class="form-group col-md-6">
+          <div class="form-group col-md-6 p-3">
             <label for="num_telefonico">Teléfono</label>
             <input type="text" class="form-control" id="num_telefonico" name="num_telefonico" value="{{ usuario.numero_telefonico }}" disabled>
           </div>
@@ -44,37 +45,37 @@
         
         <!-- Tercera fila -->
         <div class="row">
-          <div class="form-group col-md-4">
-            <label for="num_interior">Número Interior</label>
+          <div class="form-group col-md-4 p-3">
+            <label for="num_interior" class="fw-bold">Número Interior</label>
             <input type="text" class="form-control" id="num_interior" name="num_interior" value="{{ direccion.num_interior }}" disabled>
           </div>
-          <div class="form-group col-md-4">
-            <label for="num_exterior">Número Exterior</label>
+          <div class="form-group col-md-4 p-3">
+            <label for="num_exterior" class="fw-bold">Número Exterior</label>
             <input type="text" class="form-control" id="num_exterior" name="num_exterior" value="{{ direccion.num_exterior }}" disabled>
           </div>
-          <div class="form-group col-md-4">
-            <label for="colonia">Colonia</label>
+          <div class="form-group col-md-4 p-3">
+            <label for="colonia" class="fw-bold">Colonia</label>
             <input type="text" class="form-control" id="colonia" name="colonia" value="{{ direccion.colonia }}" disabled>
           </div>
         </div>
         
         <!-- Última fila -->
         <div class="row">
-          <div class="form-group col-md-6">
-            <label for="municipio">Municipio</label>
+          <div class="form-group col-md-6 p-3">
+            <label for="municipio" class="fw-bold">Municipio</label>
             <input type="text" class="form-control" id="municipio" name="municipio" value="{{ direccion.municipio }}" disabled>
           </div>
-          <div class="form-group col-md-6">
-            <label for="estado">Estado</label>
+          <div class="form-group col-md-6 p-3">
+            <label for="estado" class='fw-bold'>Estado</label>
             <input type="text" class="form-control" id="estado" name="estado" value="{{ direccion.estado }}" disabled>
           </div>
-          <div class="form-group col-md-6">
-            <label for="cp">Código postal</label>
+          <div class="form-group col-md-6 p-3">
+            <label for="cp" class="fw-bold">Código postal</label>
             <input type="text" class="form-control" id="cp" name="cp" value="{{ direccion.cp }}" disabled>
           </div>
         </div>
-        <div class="mt-2">
-          <button type="submit" class="btn btn-primary">Editar  datos</button>
+        <div class="mt-2 d-flex justify-content-center">
+          <button type="submit" class="btn btn-success col-12">Editar  datos</button>
         </div>
       </form>
     </div>
