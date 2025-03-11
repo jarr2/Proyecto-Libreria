@@ -4,8 +4,8 @@ import bcrypt
 
 class Login():
 
-    def __init__(self, id_login, correo, contrasena, privilegio):
-        self.id_login = id_login
+    def __init__(self, id, correo, contrasena, privilegio):
+        self.id = id
         self.correo = correo
         self.contrasena = contrasena
         self.privilegio = privilegio
