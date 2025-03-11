@@ -23,20 +23,6 @@ class ModeloUsuario():
             print("Error en la consulta sql: ",ex)
             return usuario
     
-    @classmethod
-    def Consultar_Nombre(cls, db, id_login):
-        nombre = ''
-        try:
-            conn = db.connect()
-            cursor = conn.cursor()
-            cursor.execute('SELECT nombre FROM Usuarios WHERE (id_login = {})'.format(id_login))
-            datosUsuario = cursor.fetchone()
-            conn.close()
-            nombre = datosUsuario[0]
-            return nombre
-        except Exception as ex:
-            print("Error en la consulta sql: ",ex)
-            return nombre
     
     @classmethod
     def Consultar_Usuarios(cls, db):
@@ -103,11 +89,11 @@ class ModeloUsuario():
                             INSERT INTO Logins (correo, contrasena, privilegio)
                             VALUES (%s, %s, %s)
                             """, (login.correo, login.contrasena, login.privilegio))
-            login.id_login = cursor.lastrowid
+            login.id = cursor.lastrowid
             cursor.execute("""
                             INSERT INTO Usuarios (id_direccion, id_login, nombre, apellidos, numero_telefonico)
                             VALUES (%s, %s, %s, %s, %s)
-                             """, (direccion.id_direccion, login.id_login, usuario.nombre, usuario.apellidos, usuario.numero_telefonico))
+                             """, (direccion.id_direccion, login.id, usuario.nombre, usuario.apellidos, usuario.numero_telefonico))
             conn.commit()
             conn.close()
             if cursor.lastrowid:
