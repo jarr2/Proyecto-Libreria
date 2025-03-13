@@ -78,7 +78,16 @@ FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario),
 FOREIGN KEY (id_libro) REFERENCES Libros(id_libro)
 );
 
-
+create table Libro_Comentado(
+	id_comentario INT auto_increment,
+    id_usuario INT NOT NULL,
+	id_libro VARCHAR(12) NOT NULL,
+    comentario VARCHAR(256),
+    bandera bool,
+    PRIMARY KEY (id_comentario),
+	FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario),
+	FOREIGN KEY (id_libro) REFERENCES Libros(id_libro)
+);
 
 ALTER TABLE Usuarios ADD FOREIGN KEY (id_direccion) REFERENCES Direcciones(id_direccion);
 ALTER TABLE Usuarios ADD FOREIGN KEY (id_login) REFERENCES Logins(id_login);
@@ -197,4 +206,7 @@ BEGIN
     WHERE id_direccion = idUsuario;
 END$$    
 DELIMITER ;
+select *from Usuarios;
+select *from Libro_Comentado;
+SELECT * FROM Libro_Comentado as lb ,Usuarios as usr WHERE id_libro = '4' and (lb.id_usuario = usr.id_usuario);
 
