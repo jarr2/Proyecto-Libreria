@@ -42,7 +42,7 @@ def login():
     return render_template('login.html')
 
 
-@app.route('/home', methods=['POST'])
+@app.route('/home', methods=['POST', 'GET'])
 def entra():
     if request.method == 'POST':
         app_api
@@ -61,8 +61,13 @@ def entra():
         else:
             flash('¡Correo o Contraseña incorrectos!', 'error')
             return redirect('/login')
+    if request.method == 'GET':
+        if current_user.login.privilegio == 'user':
+            return render_template('home_usuario.html')
+        elif current_user.login.privilegio == 'admin':
+            return render_template('home_admin.html')
     else:
-        return redirect('/login')        
+        return redirect('/login')
             
 @app.route('/logout')
 def logout():
@@ -74,60 +79,53 @@ def logout():
 @app.route('/mi-perfil', methods=['GET'])
 @login_required
 def Mi_perfil():
-    if current_user.login.privilegio == 'admin':
-        if request.method == 'GET':
-            usuario = ModeloUsuario.Consulta_Usuario(mysql, current_user.login.id)
-            direccion = Direccion(calle=None, id_direccion=None, colonia=None, cp=None, estado=None, municipio=None, num_exterior=None, num_interior=None)
-            if usuario.id_usuario != None:
-                direccion = ModeloDireccion.Consulta_Direccion(mysql, usuario.id_direccion)
-                return render_template('mi_perfil.html', usuario=usuario, direccion=direccion)
-            else:
-                flash('No se pudieron cargar tus datos...')
-                return render_template('mi_perfil.html', usuario=usuario, direccion=direccion)
+    if request.method == 'GET':
+        usuario = ModeloUsuario.Consulta_Usuario(mysql, current_user.login.id)
+        direccion = Direccion(calle=None, id_direccion=None, colonia=None, cp=None, estado=None, municipio=None, num_exterior=None, num_interior=None)
+        if usuario.id_usuario != None:
+            direccion = ModeloDireccion.Consulta_Direccion(mysql, usuario.id_direccion)
+            return render_template('mi_perfil.html', usuario=usuario, direccion=direccion)
         else:
-            return redirect('/home')
+            flash('No se pudieron cargar tus datos...')
+            return render_template('mi_perfil.html', usuario=usuario, direccion=direccion)
     else:
-        return render_template('/errores/401.html')
+            return redirect('/home')
 
 @app.route('/mi-perfil/editar', methods= ['GET'])
 @login_required
 def editar_mi_perfil():
-    if current_user.login.privilegio == 'admin':
-        if request.method == 'GET':
-            usuario = ModeloUsuario.Consulta_Usuario(mysql, current_user.login.id)
-            direccion = ModeloDireccion.Consulta_Direccion(mysql, current_user.usuario.id_direccion)
-            return render_template('editar_perfil.html', usuario=usuario, direccion=direccion)
+    if request.method == 'GET':
+        usuario = ModeloUsuario.Consulta_Usuario(mysql, current_user.login.id)
+        direccion = ModeloDireccion.Consulta_Direccion(mysql, current_user.usuario.id_direccion)
+        return render_template('editar_perfil.html', usuario=usuario, direccion=direccion)
     else:
         return render_template('/errores/401.html')
 
 @app.route('/mi-perfil/actualizar', methods=['POST'])
 @login_required
 def actualizar_mi_perfil():
-    if current_user.login.privilegio == 'admin':
-        if request.method == 'POST':
-            usuario = Usuario(id_usuario=current_user.usuario.id_usuario,
-                                id_direccion=current_user.usuario.id_direccion,
-                                id_login=current_user.login.id,
-                                nombre=request.form.get('nombres'),
-                                apellidos=request.form.get('apellidos'),
-                                numero_telefonico=request.form.get('num_telefonico'))
-            direccion = Direccion(id_direccion=usuario.id_direccion,
-                                    calle=request.form.get('calle'),
-                                    estado=request.form.get('estado'),
-                                    municipio=request.form.get('municipio'),
-                                    colonia=request.form.get('colonia'),
-                                    cp=request.form.get('cp'),
-                                    num_interior=request.form.get('num_interior'),
-                                    num_exterior=request.form.get('num_exterior'))
-            estatus = ModeloDireccion.Actualizar_Direccion(mysql,usuario,direccion)
-            if estatus != False:
-                flash('Tus datos han sido actualizados', 'success')
-                return redirect('/mi-perfil')
-            else:
-                flash('Algo ocurrió y tus datos no se actualizaron', 'warning')
-                return redirect('/mi-perfil')
-    else:
-        return render_template('/errores/401.html')
+    if request.method == 'POST':
+        usuario = Usuario(id_usuario=current_user.usuario.id_usuario,
+                            id_direccion=current_user.usuario.id_direccion,
+                            id_login=current_user.login.id,
+                            nombre=request.form.get('nombres'),
+                            apellidos=request.form.get('apellidos'),
+                            numero_telefonico=request.form.get('num_telefonico'))
+        direccion = Direccion(id_direccion=usuario.id_direccion,
+                                calle=request.form.get('calle'),
+                                estado=request.form.get('estado'),
+                                municipio=request.form.get('municipio'),
+                                colonia=request.form.get('colonia'),
+                                cp=request.form.get('cp'),
+                                num_interior=request.form.get('num_interior'),
+                                num_exterior=request.form.get('num_exterior'))
+        estatus = ModeloDireccion.Actualizar_Direccion(mysql,usuario,direccion)
+        if estatus != False:
+            flash('Tus datos han sido actualizados', 'success')
+            return redirect('/mi-perfil')
+        else:
+            flash('Algo ocurrió y tus datos no se actualizaron', 'warning')
+            return redirect('/mi-perfil')
         
 @app.route('/usuarios', methods=['GET'])
 @login_required

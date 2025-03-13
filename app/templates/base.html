@@ -32,7 +32,7 @@
 <body style="width: 100%; font-family: 'Source Sans 3'">
     <nav class="navbar navbar-expand-lg " style="background-color: #98ffa1;">
   <div class="container-fluid">
-    <a class="navbar-brand " href="#">
+    <a class="navbar-brand " >
           <img src="/static/img/Logo.png" alt="Infinity Comics" width="200" onclick="location.href='/home'" height="70">
     </a>
 
@@ -56,7 +56,7 @@
           <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle fs-5 fw-bold" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   <svg style="fill: #146c43" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="32" height="32"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M399 384.2C376.9 345.8 335.4 320 288 320l-64 0c-47.4 0-88.9 25.8-111 64.2c35.2 39.2 86.2 63.8 143 63.8s107.8-24.7 143-63.8zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm256 16a72 72 0 1 0 0-144 72 72 0 1 0 0 144z"/></svg>
-                  {{ nombre }}
+                  {{ current_user.usuario.nombre }}
               </a>
               <ul class="dropdown-menu dropdown-menu-end ">
                 <li><a class="dropdown-item fs-5" onclick="location.href='/mi-perfil'">Mi perfil</a></li>
