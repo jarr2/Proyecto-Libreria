@@ -57,6 +57,24 @@ class ModeloLibro():
             return False
 
     @classmethod
+    def unLibroDic(self, db, id_libro):
+        data = []
+        try:
+            conn = db.connect()
+            cursor = conn.cursor()
+            cursor.execute("SELECT * FROM Libros WHERE id_libro = %s", (id_libro))
+            conn.close()
+            libro = cursor.fetchone()
+            print(libro)
+            libro_obj = Libro(id_libro=id_libro, nombre=None, editorial=None, autor=None, stock=None, estatus=None,
+                              precio=None, img_ruta=None)
+
+            return libro
+        except Exception as ex:
+            print("Error en la consulta sql: ", ex)
+            return False
+
+    @classmethod
     def LibrosApi(self):
         url = "https://v7lo3sw1rk.execute-api.us-east-1.amazonaws.com/libreria_etapa"
         response = requests.get(url)

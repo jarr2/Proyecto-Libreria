@@ -1,20 +1,24 @@
 from http.client import responses
 import os
+import urllib.parse
 from flask import Flask, jsonify, render_template, request, redirect,session, flash, url_for
 from config import config
 from flaskext.mysql import MySQL
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from werkzeug.utils import secure_filename
+import requests
 
 from models.entities.Login import Login
 from models.entities.Libro import Libro
 from models.entities.Direccion import Direccion
 from models.entities.Usuario import Usuario
+from models.entities.Libro_Comentado import Libro_Comentado
 
 from models.ModeloLogin import ModeloLogin
 from models.ModeloLibro import ModeloLibro
 from models.ModeloUsuario import ModeloUsuario
 from models.ModeloDireccion import ModeloDireccion
+from models.ModeloLibroComentado import ModeloLibroComentado
 
 from models.ConsultaApi import app_api
 
@@ -24,10 +28,9 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 app.config.from_object(config['development'])
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-
+carrito=[]
 mysql = MySQL(app)
 login_manager_app = LoginManager(app)
-
 @login_manager_app.user_loader
 def load_user(id):
     return ModeloLogin.Consultar_un_Login(mysql,id)
@@ -216,10 +219,21 @@ def MuestraLibros():
 def muestraUn_Libro(nombre_libro):
     id = request.args.get('id')
     datos = ModeloLibro.unLibro(mysql, id)
+    datos_comentarios = ModeloLibroComentado.ConsultarLibroComentado(mysql, id)
+    print(datos_comentarios)
+    if datos_comentarios == []:
+        calificar = 'Sincal'
+    else:
+        for dato in datos_comentarios:
+            if(current_user.usuario.id_usuario == dato[1]):
+                calificar = 'Calificado'
+                break
+            else:
+                calificar = 'Sincal'
     #print(datos)
     libro = Libro(id_libro=id, nombre=datos.nombre,editorial=datos.editorial,autor=datos.autor, stock=datos.stock, estatus=datos.estatus, precio=datos.precio, img_ruta=datos.img_ruta)
-    #print(libro)
-    return render_template("unLibro.html", libro=libro)
+    print(calificar)
+    return render_template("unLibro.html", libro=libro, comentarios = datos_comentarios, calificar = calificar)
 
 @app.route('/listaLibros')
 def imprimeLibros():
@@ -300,6 +314,45 @@ def insertarLibro():
             return imprimeLibros()
     else:
         return render_template('/errores/401.html')
+
+@app.route('/comentaLibro', methods=['POST'])
+@login_required
+def comentarLibro():
+        if request.method == 'POST':
+            id_libro = request.form.get('id_libro')
+            name_libro = request.form.get('nombre')
+            id_usuario = current_user.usuario.id_usuario
+            comentario = request.form.get('comentario')
+            objeto = Libro_Comentado
+            objeto.id_libro=id_libro
+            objeto.id_usuario=id_usuario
+            objeto.comentario=comentario
+            objeto.bandera=True
+            ModeloLibroComentado.comentar(mysql, objeto)
+            dato1 = urllib.parse.quote(name_libro)
+            return redirect(url_for('muestraUn_Libro', nombre_libro=dato1, id=id_libro))
+
+
+@app.route('/get_carrito')
+def get_carrito():
+    carrito = session.get('carrito', {})
+    return jsonify(carrito)
+
+@app.route('/agregarCarrito', methods=['GET'])
+@login_required
+def agregarCarrito():
+    print(carrito)
+    id_libro = request.args.get('id')
+    cantidad= request.args.get('cantidad')
+    print(id_libro, cantidad)
+    consulta = ModeloLibro.unLibroDic(mysql,id_libro)
+    datos_indice = [cantidad,list(consulta)]
+    print(consulta[0])
+    carrito.append(datos_indice)
+    nombre = urllib.parse.quote(consulta[1])
+    print(nombre)
+    session['carrito'] = carrito
+    return redirect(url_for('muestraUn_Libro',nombre_libro=nombre, id=id_libro))
 
 
 def allowed_file(filename):

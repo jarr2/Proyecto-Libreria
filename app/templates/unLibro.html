@@ -28,32 +28,73 @@
                           <div class="row">
                               <div class="input-group col w-25 col-3">
                                   <button class="btn btn-outline-primary disabled" type="button" onclick="menosMas('menos');" id="btn_min" >-</button>
-                                  <input type="number" class="form-control text-center"  id="input_number" value="1" min="1">
+                                  <input type="number" class="form-control text-center"  id="cant_lb" name="cant_lb" value="1" min="1">
                                   <button class="btn btn-outline-primary" type="button" onclick="menosMas('mas');">+</button>
 
                               </div>
                               <div class="col col-9">
-                                    <button class="btn btn-success w-100">Agregar al carrito</button>
+                                    <button class="btn btn-success w-100" onclick="agregarCarrito()">Agregar al carrito</button>
                               </div>
                           </div>
                           <div class="row-cols-1">
-                              <br>
-                              Califica el libro: <span id="Estrellas"></span>   <span id="promedio-calificacion"> <p> Puntuación: {% if promedio is not none %}
-                                    {{ promedio }}
-                                {% else %}
-                                    No disponible
-                              {% endif %} </p></span>
-                              </br>
+                              <div>
+                                  <br>
+                                  Califica el libro: <span id="Estrellas"></span>   <span id="promedio-calificacion"> <p> Puntuación: {% if promedio is not none %}
+                                        {{ promedio }}
+                                    {% else %}
+                                        No disponible
+                                  {% endif %} </p></span>
+                                  </br>
+                              </div>
+
                           </div>
+
                       </div>
                     </div>
+                    {% if calificar == 'Sincal' %}
+                        <form class="form-control" method="POST" action="/comentaLibro">
+                            <div class="mb-3">
+                                <label for="comentario" class="form-label fs-5 fw-bold">Agrega un comentario sobre el comic</label>
+                                <textarea class="form-control" id="comentario" name="comentario" rows="3" maxlength="250"></textarea>
+                                <button type="submit" class="btn btn-success">Enviar</button>
+                                <input type="text" name="id_libro" id="id_libro" class="invisible" value="{{ libro.id_libro }}">
+                                <input type="text" name="nombre" id="nombre" class="invisible" value="{{ libro.nombre }}">
+
+                            </div>
+                        </form>
+                    {% else %}
+                      <p class="text-center fw-bold fs-4">Ya has calificado este libro</p>
+                  {% endif %}
                   </div>
                 </div>
+
+        </div>
+        <div class="row-cols-1 mt-3">
+            <h5 class="h4 fw-bold">Comentarios</h5>
+            {% for comentario in comentarios %}
+                <p class="fs-5 fw-bold" style="color: #146c43;">{{ comentario[8]}}</p>
+                <div class="row">
+                    <div class="col col-1 rounded-3 " style="background-color: #98ffa1;">
+                        <svg style="fill: #146c43" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512l388.6 0c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304l-91.4 0z"/></svg>
+                    </div>
+                    <div class="col col-11" >
+                         <p class="fs-5">{{ comentario[3]}}</p>
+                    </div>
+                </div>
+
+                <hr>
+            {% endfor %}
         </div>
     </div>
 
 
     <script>
+    function agregarCarrito(){
+        cantidad = document.getElementById("cant_lb").value;
+        id_libro = {{ libro.id_libro }}
+        console.log(cantidad+" - ",id_libro)
+        window.location.href = `/agregarCarrito?id=${id_libro}&cantidad=${cantidad}`
+    }
 
     function menosMas(nombre){
         input = document.getElementById("input_number");
