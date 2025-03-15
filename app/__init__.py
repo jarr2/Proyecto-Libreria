@@ -335,22 +335,50 @@ def comentarLibro():
 
 @app.route('/get_carrito')
 def get_carrito():
-    carrito = session.get('carrito', {})
-    return jsonify(carrito)
+    carrito2 = session.get('carrito', {})
+    return jsonify(carrito2)
+
+@app.route('/remove_carrito', methods=['GET'])
+def remove_carrito():
+    print("Queso badota")
+    id_cont = request.args.get('id_cont')
+    carrito3 = session.get('carrito', [])
+    print(session)
+    print(carrito3)
+    del (carrito3[int(id_cont)])
+    del (carrito[int(id_cont)])
+    print(carrito3)
+    session['carrito'] = carrito3
+    print(session)
+    return jsonify(carrito3)
 
 @app.route('/agregarCarrito', methods=['GET'])
 @login_required
 def agregarCarrito():
-    print(carrito)
     id_libro = request.args.get('id')
     cantidad= request.args.get('cantidad')
     print(id_libro, cantidad)
     consulta = ModeloLibro.unLibroDic(mysql,id_libro)
     datos_indice = [cantidad,list(consulta)]
     print(consulta[0])
-    carrito.append(datos_indice)
+    lista = list(consulta)
+    print(lista)
+    pos = 0
+    agregar = True
+    for item in carrito:
+        if lista in item:
+            lista_nueva = item
+            lista_nueva[0] = int(lista_nueva[0])+int(datos_indice[0])
+            lista_nueva[0] = str(lista_nueva[0])
+            carrito[pos] = lista_nueva
+            agregar = False
+            break
+        pos = pos + 1
+    if agregar != False:
+        carrito.append(datos_indice)
+
+    print(carrito)
     nombre = urllib.parse.quote(consulta[1])
-    print(nombre)
     session['carrito'] = carrito
     return redirect(url_for('muestraUn_Libro',nombre_libro=nombre, id=id_libro))
 
