@@ -5,7 +5,9 @@ from flask import Flask, jsonify, render_template, request, redirect,session, fl
 from config import config
 from flaskext.mysql import MySQL
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+from flask_mail import Mail
 from werkzeug.utils import secure_filename
+from emails import *
 import requests
 
 from models.entities.Login import Login
@@ -31,6 +33,9 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 carrito=[]
 mysql = MySQL(app)
 login_manager_app = LoginManager(app)
+mail = Mail(app)
+
+
 @login_manager_app.user_loader
 def load_user(id):
     return ModeloLogin.Consultar_un_Login(mysql,id)
@@ -42,6 +47,7 @@ def index():
 
 @app.route('/login')
 def login():
+    print(session.keys(),session.values(), sep='\n')
     return render_template('login.html')
 
 
@@ -75,6 +81,7 @@ def entra():
 @app.route('/logout')
 def logout():
     logout_user()
+    session.clear()
     flash('¡Tu sesión ha sido cerrada con éxito!', 'success')
     return redirect('/login')
 
@@ -382,6 +389,10 @@ def agregarCarrito():
     session['carrito'] = carrito
     return redirect(url_for('muestraUn_Libro',nombre_libro=nombre, id=id_libro))
 
+@app.route('/enviar_correo', methods = ['GET'])
+def Enviar_Correo():
+    Mandar_Correo(mail, current_user, session)
+    return redirect('/home')
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
