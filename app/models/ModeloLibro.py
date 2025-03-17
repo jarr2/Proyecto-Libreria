@@ -1,6 +1,8 @@
 from .entities.Libro import Libro
 import requests
 import json
+from flask import jsonify, render_template
+
 
 class ModeloLibro():
 
@@ -147,3 +149,100 @@ class ModeloLibro():
         except Exception as ex:
             print("Error en la consulta sql: ", ex)
             return False
+
+    @classmethod
+    def Guardar_calificacion(self, db, rankings):
+        try:
+            if not rankings:
+                print("Error: El objeto rankings es None")
+                return {'error': 'El objeto rankings es None'}
+            try:
+                print("🔹 Intentando conectar a la base de datos...")
+                conn = db.connect()
+                print("✅ Conexión exitosa")
+                cursor = conn.cursor()
+            except Exception as e:
+                print(f"❌ Error al conectar a la base de datos: {str(e)}")
+                return jsonify({'error': f'Error al conectar a la base de datos: {str(e)}'}), 500
+
+            conn = db.connect()
+            cursor = conn.cursor()
+            print('objeto de ranking ==========>', rankings)
+            id_usuario = rankings.id_usuario
+            id_libro = rankings.id_libro
+            ranking = rankings.ranking
+
+
+            cursor.execute(
+                "SELECT ranking, cantidad_calificaciones, suma_calificaciones FROM Ranking WHERE id_usuario = %s AND id_libro = %s",
+                (id_usuario, id_libro)
+            )
+            calificacion_existente = cursor.fetchone()
+            print("SELECT A BASE DE DATOS", calificacion_existente)
+
+            if calificacion_existente:
+                print("CALIFICACION EXISTENTE")
+                nueva_suma_calificaciones = calificacion_existente[2] + ranking
+                nueva_cantidad_calificaciones = calificacion_existente[1] + 1
+                print("SUMA CALIFICACION:", nueva_suma_calificaciones)
+                print("CANTIDAD CALIFICACION:", nueva_cantidad_calificaciones)
+                cursor.execute(
+                    "UPDATE Ranking SET ranking = %s, cantidad_calificaciones = %s, suma_calificaciones = %s WHERE id_usuario = %s AND id_libro = %s",
+                    (ranking, nueva_cantidad_calificaciones, nueva_suma_calificaciones, id_usuario, id_libro)
+                )
+                print("CALIFICACION EXISTENTE 3")
+            else:
+                print("NUEVO INSERT")
+                cursor.execute(
+                    "INSERT INTO Ranking (id_usuario, id_libro, ranking, cantidad_calificaciones, suma_calificaciones) VALUES (%s, %s, %s, %s, %s)",
+                    (id_usuario, id_libro, ranking, 1, ranking)
+                )
+
+            conn.commit()
+            cursor.execute(
+                "SELECT suma_calificaciones, cantidad_calificaciones FROM Ranking WHERE id_libro = %s",
+                (id_libro,)
+            )
+            resultado = cursor.fetchone()
+
+            if resultado:
+                suma_calificaciones = resultado[0]
+                cantidad_calificaciones = resultado[1]
+                if cantidad_calificaciones > 0:
+                    promedio = suma_calificaciones / cantidad_calificaciones
+                    data = {'promedio': promedio,
+                            'mensaje': 'Calificación guardada exitosamente y promedio actualizado.'}
+                    print("PROMEDIO: ", promedio)
+                    print(f"Respuesta enviada: {data}")
+                else:
+                    data = {'mensaje': 'No hay calificaciones para este libro.'}
+            else:
+                data = {'mensaje': 'No se encontró el libro.'}
+            conn.close()
+            print(data)
+            return jsonify(data)
+
+        except Exception as e:
+            return jsonify({'error': str(e)})
+
+    def calcular_promedio(self,db, id_libro):
+        conn = db.connect()
+        cursor = conn.cursor()
+
+        cursor.execute("SELECT suma_calificaciones, cantidad_calificaciones FROM Ranking WHERE id_libro = %s",
+                           (id_libro,))
+        resultado = cursor.fetchone()
+
+        if resultado:
+            suma_calificaciones = resultado[0]
+            cantidad_calificaciones = resultado[1]
+
+            if cantidad_calificaciones > 0:
+                promedio = suma_calificaciones / cantidad_calificaciones
+                return round(promedio, 1)
+            else:
+                return 0
+        else:
+            return 0
+
+

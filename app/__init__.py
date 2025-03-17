@@ -13,6 +13,7 @@ import requests
 from models.entities.Login import Login
 from models.entities.Libro import Libro
 from models.entities.Direccion import Direccion
+from models.entities.Ranking import Ranking
 from models.entities.Usuario import Usuario
 from models.entities.Libro_Comentado import Libro_Comentado
 
@@ -321,6 +322,39 @@ def insertarLibro():
             return imprimeLibros()
     else:
         return render_template('/errores/401.html')
+
+@app.route('/Guardar_calificacion', methods=['GET','POST'])
+#@login_required
+def Guardar_calificacion():
+    if request.method == 'POST':
+        id_libro = request.args.get('id')
+        ranking = request.form.get('ranking')
+        id_usuario = current_user.usuario.id_usuario
+        #cantidad_calificaciones = 1
+        ranking = int(ranking)
+        rankings = Ranking(id_ranking=None,id_usuario=id_usuario,id_libro=id_libro, ranking=ranking, cantidad_calificaciones=None)
+        modelo_libro = ModeloLibro()
+        resultado = modelo_libro.Guardar_calificacion(mysql, rankings)
+
+        if resultado:
+            promedio = modelo_libro.calcular_promedio(mysql, id_libro)
+
+            respuesta = {
+                'status': 'success',
+                'message': 'Calificación guardada correctamente',
+                'promedio': promedio
+            }
+            return jsonify(respuesta), 200
+        else:
+            respuesta = {
+                'status': 'error',
+                'message': 'Hubo un problema al guardar la calificación'
+            }
+            return jsonify(respuesta), 500  # Error del servidor
+
+
+
+
 
 @app.route('/comentaLibro', methods=['POST'])
 @login_required

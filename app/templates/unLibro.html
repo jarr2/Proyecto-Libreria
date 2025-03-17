@@ -39,11 +39,12 @@
                           <div class="row-cols-1">
                               <div>
                                   <br>
-                                  Califica el libro: <span id="Estrellas"></span>   <span id="promedio-calificacion"> <p> Puntuación: {% if promedio is not none %}
+                                  Califica el libro: <span id="Estrellas"></span>
+                                  <span id="promedio-calificacion">  Puntuación: {% if promedio is not none %}
                                         {{ promedio }}
                                     {% else %}
                                         No disponible
-                                  {% endif %} </p></span>
+                                  {% endif %} </span>
                                   </br>
                               </div>
 
@@ -86,7 +87,11 @@
             {% endfor %}
         </div>
     </div>
+{% block customJS %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
 
+<script src="{{ url_for('static', filename='js/starrr.js')}}"></script>
+    {% endblock %}
 
     <script>
     function agregarCarrito(){
@@ -124,17 +129,26 @@
         $(document).ready(function() {
     $('#Estrellas').starrr({
         change: function(e, valor) {
-            alert(valor);
+            var urlParams = new URLSearchParams(window.location.search);
+            var id_libro = urlParams.get('id');
+            console.log("ID del libro:", id_libro);
+
+            if (!id_libro) {
+                console.error("No se encontró id_libro en la URL");
+                alert("Error: No se pudo obtener el ID del libro.");
+                return;
+            }
             $.ajax({
-                url: 'http://127.0.0.1:5000/Guardar_calificacion',
-                type: 'GET',
+                url: 'http://127.0.0.1:5000/Guardar_calificacion?id=' + id_libro,
+                type: 'POST',
                 data: { ranking: valor },
                 dataType: 'json',
-               success: function(response) {
+                success: function(response) {
                     console.log("Respuesta del servidor:", response);
+                    console.log("EL PROMEDIO", response.promedio);
                     if (response.promedio !== undefined && response.promedio !== null) {
-                        var promedio = response.promedio.toFixed(1); //para limitar a un decimal chavales
-                        $('#promedio-calificacion').text('Puntuación: ' + promedio);
+                        var promedio = response.promedio.toFixed(1); //para limitar a un decimal
+                        $('#promedio-calificacion').html('Puntuación: ' + promedio);
                     } else {
                         $('#promedio-calificacion').text('Promedio de calificación: No disponible');
                     }
@@ -144,6 +158,7 @@
                     alert('Error al guardar la calificación.');
                 }
             });
+
 
 
         }
