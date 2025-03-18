@@ -78,13 +78,26 @@ class ModeloLibro():
 
     @classmethod
     def LibrosApi(self):
-        url = "https://v7lo3sw1rk.execute-api.us-east-1.amazonaws.com/libreria_etapa"
+        url = "https://yg0isxnwaf.execute-api.us-east-1.amazonaws.com/libros/libros"
         response = requests.get(url)
+        print(response)
         # Verificar si la solicitud fue exitosa
         if response.status_code == 200:
             data = response.json()
-            body_json = json.loads(data['body'])
-        return body_json
+            #body_json = json.loads(data['body'])
+        return data
+
+    @classmethod
+    def descontarStock(self):
+        url = "https://yg0isxnwaf.execute-api.us-east-1.amazonaws.com/libros/libros"
+        response = requests.get(url)
+        print(response)
+        # Verificar si la solicitud fue exitosa
+        if response.status_code == 200:
+            data = response.json()
+            # body_json = json.loads(data['body'])
+        return data
+
 
     @classmethod
     def Actualizar_Libro(cls, db, libro):
