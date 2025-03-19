@@ -122,40 +122,37 @@
     }
 
         $(document).ready(function() {
-    $('#Estrellas').starrr({
-        change: function(e, valor) {
-            var urlParams = new URLSearchParams(window.location.search);
-            var id_libro = urlParams.get('id');
-            console.log("ID del libro:", id_libro);
+            $('#Estrellas').starrr({
+                change: function(e, valor) {
+                    var urlParams = new URLSearchParams(window.location.search);
+                    var id_libro = urlParams.get('id');
+                    console.log("ID del libro:", id_libro);
 
-            if (!id_libro) {
-                console.error("No se encontró id_libro en la URL");
-                alert("Error: No se pudo obtener el ID del libro.");
-                return;
-            }
-            $.ajax({
-                url: 'http://127.0.0.1:5000/Guardar_calificacion?id=' + id_libro,
-                type: 'POST',
-                data: { ranking: valor },
-                dataType: 'json',
-                success: function(response) {
-                    console.log("Respuesta del servidor:", response);
-                    console.log("EL PROMEDIO", response.promedio);
-                    if (response.promedio !== undefined && response.promedio !== null) {
-                        var promedio = response.promedio.toFixed(1); //para limitar a un decimal
-                        $('#promedio-calificacion').html('Puntuación: ' + promedio);
-                    } else {
-                        $('#promedio-calificacion').text('Promedio de calificación: No disponible');
+                    if (!id_libro) {
+                        console.error("No se encontró id_libro en la URL");
+                        alert("Error: No se pudo obtener el ID del libro.");
+                        return;
                     }
-                },
-                error: function(xhr, status, error) {
-                    console.log("Error al enviar la calificación:", xhr.responseText);
-                    alert('Error al guardar la calificación.');
-                }
-            });
-
-
-
+                    $.ajax({
+                        url: 'http://127.0.0.1:5000/Guardar_calificacion?id=' + id_libro,
+                        type: 'POST',
+                        data: { ranking: valor },
+                        dataType: 'json',
+                        success: function(response) {
+                            console.log("Respuesta del servidor:", response);
+                            console.log("EL PROMEDIO", response.promedio);
+                            if (response.promedio !== undefined && response.promedio !== null) {
+                                var promedio = response.promedio.toFixed(1); //para limitar a un decimal y no se vea como el valor de pi >:(
+                                $('#promedio-calificacion').html('Puntuación: ' + promedio);
+                            } else {
+                                $('#promedio-calificacion').text('Promedio de calificación: No disponible');
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.log("Error al enviar la calificación:", xhr.responseText);
+                            alert('Error al guardar la calificación.');
+                        }
+                    });
         }
     });
 });

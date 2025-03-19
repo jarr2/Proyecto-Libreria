@@ -242,20 +242,20 @@ class ModeloLibro():
         conn = db.connect()
         cursor = conn.cursor()
 
-        cursor.execute("SELECT suma_calificaciones, cantidad_calificaciones FROM Ranking WHERE id_libro = %s",
-                           (id_libro,))
-        resultado = cursor.fetchone()
+        cursor.execute("SELECT SUM(ranking), COUNT(*) FROM Ranking WHERE id_libro = %s", (id_libro,))
+        suma_calificaciones, cantidad_calificaciones = cursor.fetchone()
 
-        if resultado:
-            suma_calificaciones = resultado[0]
-            cantidad_calificaciones = resultado[1]
-
-            if cantidad_calificaciones > 0:
-                promedio = suma_calificaciones / cantidad_calificaciones
-                return round(promedio, 1)
-            else:
-                return 0
+        if cantidad_calificaciones > 0:
+            promedio = suma_calificaciones / cantidad_calificaciones
+            promedio = int(promedio)
+            return promedio
         else:
-            return 0
+            promedio = 0
+            return promedio
+
+        conn.commit()
+        conn.close()
+
+
 
 
