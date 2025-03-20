@@ -79,7 +79,15 @@ class ModeloLibro():
     @classmethod
     def LibrosApi(self):
         url = "https://yg0isxnwaf.execute-api.us-east-1.amazonaws.com/libros/libros"
-        response = requests.get(url)
+
+        # Tu API key
+        api_key = "PCWtiB5khP60sa9X1jd2l4kFAQXMyC1E2SiiSHZV"
+
+        # Cabeceras con la API key
+        headers = {
+            "x-api-key": api_key
+        }
+        response = requests.get(url,headers=headers)
         print(response)
         # Verificar si la solicitud fue exitosa
         if response.status_code == 200:
@@ -88,10 +96,16 @@ class ModeloLibro():
         return data
 
     @classmethod
-    def descontarStock(self):
+    def descontarStock(self, id, unidades):
         url = "https://yg0isxnwaf.execute-api.us-east-1.amazonaws.com/libros/libros"
-        response = requests.get(url)
-        print(response)
+        # Tu API key
+        api_key = "PCWtiB5khP60sa9X1jd2l4kFAQXMyC1E2SiiSHZV"
+
+        # Cabeceras con la API key
+        headers = {
+            "x-api-key": api_key
+        }
+        response = requests.patch(url,headers=headers, params=(id,unidades) )
         # Verificar si la solicitud fue exitosa
         if response.status_code == 200:
             data = response.json()
@@ -256,6 +270,27 @@ class ModeloLibro():
         conn.commit()
         conn.close()
 
+    def verificarExistencias(self, db , id_libro, unidades):
+        print(id_libro, unidades)
+        conn = db.connect()
+        cursor = conn.cursor()
+        query = """
+            SELECT CASE 
+                WHEN stock >= %s THEN 1
+                ELSE 0
+            END AS es_posible
+            FROM Libros
+            WHERE id_libro = %s;
+            """
 
+        cursor.execute(query, (unidades, str(id_libro)))
+        resultado = cursor.fetchone()
 
+        conn.close()
 
+        # Retornar True o False dependiendo del resultado
+        if resultado:
+            return resultado[0] == 1
+        else:
+            # Producto no encontrado
+            return False

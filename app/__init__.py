@@ -425,8 +425,32 @@ def agregarCarrito():
 
 @app.route('/enviar_correo', methods = ['GET'])
 def Enviar_Correo():
-    Mandar_Correo(mail, current_user, session)
-    return redirect('/home')
+    datos = session.get('carrito', {})
+    dic = validacion_Stock(datos)
+    no_stock = []
+    if(dic['bool'] == []):
+        messi = ModeloLibro()
+        for item in carrito:
+            messi.descontarStock(int(item[0]), item[1][0])
+        print("Dile ya a tus papas que ya no vas a regresar")
+    else:
+        no_stock= dic["ids"]
+        print(no_stock, "yo confiaba en ti")
+    #Mandar_Correo(mail, current_user, session)
+    return render_template('home_usuario.html',no_stock=no_stock)
+
+def validacion_Stock(carrito):
+    validacion = {
+        "bool": [],
+        "ids": []
+    }
+    libros = ModeloLibro()
+    for item in carrito:
+        resultado = libros.verificarExistencias(mysql,item[1][0],int(item[0]))
+        if resultado != True:
+            validacion["ids"].append(item[1][0])
+            validacion["bool"].append(resultado)
+    return validacion
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS

@@ -116,6 +116,8 @@
                     for (let item of data) {
                         console.log(cont_impar + " - " + cont_par)
                         console.log(data)
+                        var sin_stock = []
+                        sin_stock = {{ no_stock | default("null") | tojson }};
                         var htmlContent = `
                             <div class="card mb-3" style="max-width: 540px;" id="${cont}">
                               <div class="row g-0">
@@ -134,10 +136,25 @@
                               </div>
                             </div>
                         `;
+
                         cont = cont + 1
                         cont_par = cont_par + 2;
                         cont_impar = cont_impar + 2;
                         carritoDiv.innerHTML += htmlContent;
+                        try {
+                            elemento = document.getElementById(cont-1);
+                            if (!(typeof sin_stock === "undefined" )) {
+                                console.log(item[1][0]+" ids: "+sin_stock )
+                                if (sin_stock.includes(item[1][0])) {
+                                    console.log("Lo encontré bro lo encontré")
+                                    elemento.style.backgroundColor = "#ffadad"
+                                }
+                            }else{
+                                console.log("la variable si esta vacia")
+                            }
+                        }catch (E){
+                            console.log("Bandera de mexico")
+                        }
                     }
                     var boton_env = `<div>
                             <button class="btn btn-success" onclick="location.href='/enviar_correo'" >Comprar</button>

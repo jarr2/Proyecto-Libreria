@@ -91,7 +91,7 @@
     <script>
     function agregarCarrito(){
         cantidad = document.getElementById("cant_lb").value;
-        id_libro = {{ libro.id_libro }}
+        id_libro = "{{ libro.id_libro }}"
         console.log(cantidad+" - ",id_libro)
         window.location.href = `/agregarCarrito?id=${id_libro}&cantidad=${cantidad}`
     }
