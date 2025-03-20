@@ -139,8 +139,6 @@
                     for (let item of data) {
                         console.log(cont_impar + " - " + cont_par)
                         console.log(data)
-                        var sin_stock = []
-                        sin_stock = {{ no_stock | default("null") | tojson }};
                         var htmlContent = `
                             <div class="card mb-3" style="max-width: 540px;" id="${cont}">
                               <div class="row g-0">
@@ -165,6 +163,8 @@
                         cont_impar = cont_impar + 2;
                         carritoDiv.innerHTML += htmlContent;
                         try {
+                            var sin_stock = []
+                        sin_stock = {{ no_stock | default("null") | tojson }};
                             elemento = document.getElementById(cont-1);
                             if (!(typeof sin_stock === "undefined" )) {
                                 console.log(item[1][0]+" ids: "+sin_stock )

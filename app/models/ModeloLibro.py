@@ -67,7 +67,6 @@ class ModeloLibro():
             cursor.execute("SELECT * FROM Libros WHERE id_libro = %s", (id_libro))
             conn.close()
             libro = cursor.fetchone()
-            print(libro)
             libro_obj = Libro(id_libro=id_libro, nombre=None, editorial=None, autor=None, stock=None, estatus=None,
                               precio=None, img_ruta=None)
 

@@ -398,12 +398,10 @@ def remove_carrito():
 def agregarCarrito():
     id_libro = request.args.get('id')
     cantidad= request.args.get('cantidad')
-    print(id_libro, cantidad)
     consulta = ModeloLibro.unLibroDic(mysql,id_libro)
     datos_indice = [cantidad,list(consulta)]
-    print(consulta[0])
     lista = list(consulta)
-    print(lista)
+    print("Lista de elementos a agregar",lista)
     pos = 0
     agregar = True
     for item in carrito:
@@ -418,7 +416,7 @@ def agregarCarrito():
     if agregar != False:
         carrito.append(datos_indice)
 
-    print(carrito)
+    print("Ese conde le puso ro",carrito)
     nombre = urllib.parse.quote(consulta[1])
     session['carrito'] = carrito
     return redirect(url_for('muestraUn_Libro',nombre_libro=nombre, id=id_libro))
@@ -433,8 +431,9 @@ def Enviar_Correo():
         for item in carrito:
             messi.descontarStock(int(item[0]), item[1][0])
             print("Dile ya a tus papas que ya no vas a regresar")
-            Mandar_Correo(mail, current_user, session)
-            session['carrito'] = {}
+            #Mandar_Correo(mail, current_user, session)
+        session.pop('carrito')
+        carrito.clear()
         flash('Tu ticket ha sido enviado a tu correo','success')
     else:
         no_stock= dic["ids"]
