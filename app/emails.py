@@ -3,7 +3,7 @@ from flask import current_app, render_template
 
 def Mandar_Correo(mail, current_user, data):
     carrito = data['carrito']
-    total = sum(int(item[1][4]) * int(item[1][6]) for item in carrito)
+    total = sum(int(item[0]) * int(item[1][6]) for item in carrito)
     try:
         message = Message('Confirmación de compra de libro',
                           sender=current_app.config['MAIL_USERNAME'],
