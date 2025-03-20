@@ -432,11 +432,14 @@ def Enviar_Correo():
         messi = ModeloLibro()
         for item in carrito:
             messi.descontarStock(int(item[0]), item[1][0])
-        print("Dile ya a tus papas que ya no vas a regresar")
+            print("Dile ya a tus papas que ya no vas a regresar")
+            Mandar_Correo(mail, current_user, session)
+            session['carrito'] = {}
+        flash('Tu ticket ha sido enviado a tu correo','success')
     else:
         no_stock= dic["ids"]
+        flash('Algunos productos no cuentan con stock', 'warning')
         print(no_stock, "yo confiaba en ti")
-    #Mandar_Correo(mail, current_user, session)
     return render_template('home_usuario.html',no_stock=no_stock)
 
 def validacion_Stock(carrito):

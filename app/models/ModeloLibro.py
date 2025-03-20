@@ -96,7 +96,7 @@ class ModeloLibro():
         return data
 
     @classmethod
-    def descontarStock(self, id, unidades):
+    def descontarStock(self, unidades,id ):
         url = "https://yg0isxnwaf.execute-api.us-east-1.amazonaws.com/libros/libros"
         # Tu API key
         api_key = "PCWtiB5khP60sa9X1jd2l4kFAQXMyC1E2SiiSHZV"
@@ -105,11 +105,16 @@ class ModeloLibro():
         headers = {
             "x-api-key": api_key
         }
-        response = requests.patch(url,headers=headers, params=(id,unidades) )
-        # Verificar si la solicitud fue exitosa
-        if response.status_code == 200:
-            data = response.json()
-            # body_json = json.loads(data['body'])
+        params = {
+            "id": str(id),
+            "unidades": unidades
+        }
+        print(params)
+        response = requests.patch(url,headers=headers, json=params )
+
+        data = response.json() if response.status_code == 200 else None
+        if response.status_code != 200:
+            print(f"Error {response.status_code}: {response.text}")
         return data
 
 
