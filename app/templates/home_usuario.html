@@ -108,15 +108,15 @@
             const h5_badge = document.createElement('h5');
             const badge = document.createElement('span');
             badge.classList.add("badge", "text-bg-info","position-absolute","word-break");
-            badge.innerHTML = lb[5];
+            badge.innerHTML = lb[5].toString();
             const div_otro = document.createElement('div');
             div_otro.classList.add('col-7');
 
             h5_badge.appendChild(badge);
             div_otro.appendChild(h5_badge);
             contenedor2.appendChild(contenedor3);
-            if (lb[5] == 'Nuevo') {
-
+            console.log(lb[5].toString())
+            if (lb[5] == "Nuevo") {
             contenedor2.appendChild(div_otro);
             }
             li.appendChild(contenedor2)

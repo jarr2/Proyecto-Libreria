@@ -431,7 +431,7 @@ def Enviar_Correo():
         for item in carrito:
             messi.descontarStock(int(item[0]), item[1][0])
             print("Dile ya a tus papas que ya no vas a regresar")
-            #Mandar_Correo(mail, current_user, session)
+        Mandar_Correo(mail, current_user, session)
         session.pop('carrito')
         carrito.clear()
         flash('Tu ticket ha sido enviado a tu correo','success')
