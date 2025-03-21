@@ -38,14 +38,57 @@
                           </div>
                           <div class="row-cols-1">
                               <div>
+                              {% if apa_estrella is none %}
                                   <br>
+                                <!-- <i class="fa-solid fa-star" style="color: gold;"></i>  {# Estrella llena #} -->
                                   Califica el libro: <span id="Estrellas"></span>
+
                                   <span id="promedio-calificacion">  Puntuación: {% if promedio is not none %}
                                         {{ promedio }}
                                     {% else %}
                                         No disponible
                                   {% endif %} </span>
+                              {% elif apa_estrella == 1 %}
+                                  Libro calificado: <i class="fa-solid fa-star" style="color: gold;"></i>
+                                    <i class="fa-regular fa-star" style="color: gray;"></i>
+                                    <i class="fa-regular fa-star" style="color: gray;"></i>
+                                    <i class="fa-regular fa-star" style="color: gray;"></i>
+                                    <i class="fa-regular fa-star" style="color: gray;"></i>
+                                  <p>Promedio: {{ promedio }}</p>
                                   </br>
+                              {% elif apa_estrella == 2 %}
+                                  Libro calificado: <i class="fa-solid fa-star" style="color: gold;"></i>
+                                    <i class="fa-solid fa-star" style="color: gold;"></i>
+                                    <i class="fa-regular fa-star" style="color: gray;"></i>
+                                    <i class="fa-regular fa-star" style="color: gray;"></i>
+                                    <i class="fa-regular fa-star" style="color: gray;"></i>
+                                  <p>Promedio: {{ promedio }}</p>
+                                  </br>
+                              {% elif apa_estrella == 3 %}
+                                  Libro calificado: <i class="fa-solid fa-star" style="color: gold;"></i>
+                                    <i class="fa-solid fa-star" style="color: gold;"></i>
+                                    <i class="fa-solid fa-star" style="color: gold;"></i>
+                                    <i class="fa-regular fa-star" style="color: gray;"></i>
+                                    <i class="fa-regular fa-star" style="color: gray;"></i>
+                                  <p>Promedio: {{ promedio }}</p>
+                                  </br>
+                              {% elif apa_estrella == 4 %}
+                                  Libro calificado: <i class="fa-solid fa-star" style="color: gold;"></i>
+                                    <i class="fa-solid fa-star" style="color: gold;"></i>
+                                    <i class="fa-solid fa-star" style="color: gold;"></i>
+                                    <i class="fa-solid fa-star" style="color: gold;"></i>
+                                    <i class="fa-regular fa-star" style="color: gray;"></i>
+                                  <p>Promedio: {{ promedio }}</p>
+                                  </br>
+                              {% elif apa_estrella == 5 %}
+                                  Libro calificado: <i class="fa-solid fa-star" style="color: gold;"></i>
+                                    <i class="fa-solid fa-star" style="color: gold;"></i>
+                                    <i class="fa-solid fa-star" style="color: gold;"></i>
+                                    <i class="fa-solid fa-star" style="color: gold;"></i>
+                                    <i class="fa-solid fa-star" style="color: gold;"></i>
+                                  <p>Promedio: {{ promedio }}</p>
+                                  </br>
+                              {% endif %}
                               </div>
 
                           </div>
@@ -104,8 +147,6 @@
             valor = 0
 
         }
-
-
 
         if((valor-1) == 1 && nombre=='menos'){
             btn_menos.classList.add("disabled")

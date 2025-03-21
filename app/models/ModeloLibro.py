@@ -198,7 +198,6 @@ class ModeloLibro():
 
             conn = db.connect()
             cursor = conn.cursor()
-            print('objeto de ranking ==========>', rankings)
             id_usuario = rankings.id_usuario
             id_libro = rankings.id_libro
             ranking = rankings.ranking
@@ -209,21 +208,16 @@ class ModeloLibro():
                 (id_usuario, id_libro)
             )
             calificacion_existente = cursor.fetchone()
-            print("SELECT A BASE DE DATOS", calificacion_existente)
 
             if calificacion_existente:
-                print("CALIFICACION EXISTENTE")
                 nueva_suma_calificaciones = calificacion_existente[2] + ranking
                 nueva_cantidad_calificaciones = calificacion_existente[1] + 1
-                print("SUMA CALIFICACION:", nueva_suma_calificaciones)
-                print("CANTIDAD CALIFICACION:", nueva_cantidad_calificaciones)
                 cursor.execute(
                     "UPDATE Ranking SET ranking = %s, cantidad_calificaciones = %s, suma_calificaciones = %s WHERE id_usuario = %s AND id_libro = %s",
                     (ranking, nueva_cantidad_calificaciones, nueva_suma_calificaciones, id_usuario, id_libro)
                 )
                 print("CALIFICACION EXISTENTE 3")
             else:
-                print("NUEVO INSERT")
                 cursor.execute(
                     "INSERT INTO Ranking (id_usuario, id_libro, ranking, cantidad_calificaciones, suma_calificaciones) VALUES (%s, %s, %s, %s, %s)",
                     (id_usuario, id_libro, ranking, 1, ranking)
@@ -243,8 +237,6 @@ class ModeloLibro():
                     promedio = suma_calificaciones / cantidad_calificaciones
                     data = {'promedio': promedio,
                             'mensaje': 'Calificación guardada exitosamente y promedio actualizado.'}
-                    print("PROMEDIO: ", promedio)
-                    print(f"Respuesta enviada: {data}")
                 else:
                     data = {'mensaje': 'No hay calificaciones para este libro.'}
             else:
@@ -273,6 +265,23 @@ class ModeloLibro():
 
         conn.commit()
         conn.close()
+
+    @classmethod
+    def Verifica_calificacion(self, db, rankings):
+        conn = db.connect()
+        cursor = conn.cursor()
+        id_usuario = rankings.id_usuario
+        id_libro = rankings.id_libro
+        cursor.execute("SELECT ranking from Ranking where id_usuario = %s AND id_libro = %s", (id_usuario, id_libro))
+        la_puntuacion = cursor.fetchone()
+        print("LA PUNTUACIÓN:",la_puntuacion)
+        if la_puntuacion:
+            try:
+                return int(la_puntuacion[0])
+            except ValueError:
+                return None
+        else:
+            return None
 
     def verificarExistencias(self, db , id_libro, unidades):
         print(id_libro, unidades)

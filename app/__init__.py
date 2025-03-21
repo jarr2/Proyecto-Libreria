@@ -227,7 +227,17 @@ def MuestraLibros():
 def muestraUn_Libro(nombre_libro):
     id = request.args.get('id')
     datos = ModeloLibro.unLibro(mysql, id)
+    print('ID DEL LIBRO:  ', id)
+    id_usuario = current_user.usuario.id_usuario
+    print('ID DEL USUARIO:  ', id_usuario)
+    rankings = Ranking(id_ranking=None, id_usuario=id_usuario, id_libro=id, ranking=None,
+                       cantidad_calificaciones=None)
+    print('ID LIBRO RANKINGS:',rankings.id_libro)
+    modelo_libro = ModeloLibro()
     datos_comentarios = ModeloLibroComentado.ConsultarLibroComentado(mysql, id)
+    apa_estrella = ModeloLibro.Verifica_calificacion(mysql, rankings)
+    promedio = modelo_libro.calcular_promedio(mysql, id)
+    print("APA ESTRELLLLLAS:", apa_estrella)
     print(datos_comentarios)
     if datos_comentarios == []:
         calificar = 'Sincal'
@@ -241,7 +251,7 @@ def muestraUn_Libro(nombre_libro):
     #print(datos)
     libro = Libro(id_libro=id, nombre=datos.nombre,editorial=datos.editorial,autor=datos.autor, stock=datos.stock, estatus=datos.estatus, precio=datos.precio, img_ruta=datos.img_ruta)
     print(calificar)
-    return render_template("unLibro.html", libro=libro, comentarios = datos_comentarios, calificar = calificar)
+    return render_template("unLibro.html", libro=libro, comentarios = datos_comentarios, calificar = calificar, apa_estrella=apa_estrella, promedio=promedio)
 
 @app.route('/listaLibros')
 def imprimeLibros():
@@ -314,7 +324,7 @@ def insertarLibro():
                 img_ruta = save_path
                 file.save(save_path)
             print(img_ruta)
-            libro = Libro(id_libro="A1001", nombre=nombre, editorial=editorial, autor=autor,
+            libro = Libro(id_libro="A1003", nombre=nombre, editorial=editorial, autor=autor,
                         stock=int(stock),
                         estatus=estatus, precio=float(precio), img_ruta=img_ruta)
             ModeloLibro.insertarLibro(mysql, libro)
@@ -373,7 +383,21 @@ def comentarLibro():
             dato1 = urllib.parse.quote(name_libro)
             return redirect(url_for('muestraUn_Libro', nombre_libro=dato1, id=id_libro))
 
-
+'''        
+@app.route('/Verifica_calificacion', methods=['GET'])
+@login_required
+def Verifica_calificacion():
+    print("La vista 'Verifica_calificacion' ha sido llamada.")
+    id_libro = request.args.get('id')
+    print('ID DEL LIBRO:  ',id_libro)
+    id_usuario = current_user.usuario.id_usuario
+    print('ID DEL USUARIO:  ',id_usuario)
+    rankings = Ranking(id_ranking=None, id_usuario=id_usuario, id_libro=id_libro, ranking=None,
+                       cantidad_calificaciones=None)
+    modelo_libro = ModeloLibro()
+    apa_estrella = modelo_libro.Verifica_calificacion(mysql, rankings)
+    return render_template('../templates/unLibro.html', apa_estrella=apa_estrella)
+'''
 @app.route('/get_carrito')
 def get_carrito():
     carrito2 = session.get('carrito', {})
